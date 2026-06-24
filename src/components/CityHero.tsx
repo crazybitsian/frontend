@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { City } from "@/lib/api/types";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { UserProfile } from "@/components/UserProfile";
 
 interface CityHeroProps {
   cities: City[];
@@ -72,7 +73,8 @@ export function CityHero({ cities }: CityHeroProps) {
           >
             <Menu className="h-5 w-5" />
           </button>
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-6">
+            <UserProfile variant="transparent" />
             <Link
               href="/owner"
               className="text-sm font-semibold text-white border border-white px-6 py-2.5 rounded-full hover:bg-white hover:text-foreground transition-all duration-200"

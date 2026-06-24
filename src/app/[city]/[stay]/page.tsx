@@ -10,6 +10,7 @@ import { AmenityList } from "@/components/AmenityList";
 import { Footer } from "@/components/Footer";
 import { notFound } from "next/navigation";
 import { StayGallery } from "@/components/StayGallery";
+import { StayControls } from "@/components/StayControls";
 
 export const revalidate = 3600;
 
@@ -85,12 +86,7 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <div className="flex gap-2">
-              <button className="flex items-center justify-center h-10 w-10 rounded-full bg-card border border-border text-foreground hover:bg-muted transition-colors shadow-sm" aria-label="Share">
-                <Share2 className="h-4.5 w-4.5" />
-              </button>
-              <button className="flex items-center justify-center h-10 w-10 rounded-full bg-card border border-border text-foreground hover:bg-muted transition-colors shadow-sm" aria-label="Save">
-                <Heart className="h-4.5 w-4.5" />
-              </button>
+              <StayControls propertyId={property.id} propertyName={property.name} />
             </div>
           </header>
 

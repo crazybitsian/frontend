@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { UserProfile } from "./UserProfile";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -30,12 +31,15 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link
-            href="/owner"
-            className="text-sm font-semibold bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors"
-          >
-            List your property
-          </Link>
+          <div className="flex items-center gap-4 border-l border-border pl-6">
+            <UserProfile />
+            <Link
+              href="/owner"
+              className="text-sm font-semibold bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+            >
+              List your property
+            </Link>
+          </div>
         </nav>
 
         {/* Mobile Menu Toggle */}
@@ -61,10 +65,13 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
+          <div className="pt-2 pb-4 border-b border-border/40">
+            <UserProfile />
+          </div>
           <Link
             href="/owner"
             onClick={() => setMobileOpen(false)}
-            className="block w-full text-center text-sm font-semibold bg-primary text-primary-foreground px-5 py-3 rounded-lg hover:bg-primary/90 transition-colors"
+            className="block w-full text-center text-sm font-semibold bg-primary text-primary-foreground px-5 py-3 rounded-lg hover:bg-primary/90 transition-colors mt-4"
           >
             List your property
           </Link>

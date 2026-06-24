@@ -111,15 +111,7 @@ export default function TermsOfServicePage() {
                 </div>
               </section>
               
-              {/* Image Visual Break */}
-              <div className="my-16 rounded-2xl overflow-hidden aspect-[21/9] border border-border relative">
-                <Image 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS-znXvISfTIAsPthuPJ8TWSE0W_JB6j9JM4nhJq_oYUEjJ9sRzK02T8vytaOg82cF7cKcUp0NX_-0wUm0jHxkJQo-6QUoZyKTFvolCqWlY8a98mtNvt19wYFxeIltRWKS60g7Kt1i0lKfKOSn5pfHyvaq19Kp5SWJsIQilktAle8zcsOisXA3cuni8hZ29Ng_KON_XcjgJj2_bfioJz9uHES5zzsaoJziGjs5cRmOW94nbAN0OAHtcD5Znq-9XUJALsW9L1LP7whY" 
-                  alt="Terms of Service Visual"
-                  fill
-                  className="object-cover"
-                />
-              </div>
+
               
               {/* User Rules Section */}
               <section className="scroll-mt-32" id="user-rules">

@@ -36,8 +36,8 @@ export default function AboutUsPage() {
         <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
           <div className="absolute inset-0 w-full h-full">
             <Image 
-              src="https://lh3.googleusercontent.com/aida/AP1WRLuhGnx32UCO8j0A1O-UCSKW_s-MG-SRTgrPAoNjwtkUs9CxOs-EY5jIMtiBQade5wtYphBq7iXAxKmhKmsq9sV0Un5T8SLkcuuG7_GuOqwc0Po2StAmmJiXcGouE-VmRFdTQ2PESgqIul3Csj015aBEhFY_0r7jsmAT5c9hfch0slObtLNBVGHEwRsefAsxINQ3WQ1up6q4M3Yb-SoNrY6Axp4Yj20ZXbmj9AVKrsXe0lpp7qbnzLaX-8bU" 
-              alt="Architectural representation of a modern student living space" 
+              src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=3840&auto=format&fit=crop" 
+              alt="Premium student living space" 
               fill
               className="object-cover"
               priority
