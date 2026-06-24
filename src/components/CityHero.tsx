@@ -131,13 +131,13 @@ export function CityHero({ cities }: CityHeroProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="flex flex-nowrap md:flex-wrap justify-start md:justify-center gap-3 mt-8 overflow-x-auto w-full max-w-4xl px-4 md:px-0 py-2 hide-scrollbar"
+          className="grid grid-cols-3 gap-2 md:flex md:flex-wrap justify-center mt-8 w-full max-w-4xl px-4 md:px-0 py-2"
         >
           {CITY_PILLS.map((city) => (
             <Link
               key={city.slug}
               href={`/${city.slug}`}
-              className="shrink-0 whitespace-nowrap text-sm sm:text-base font-semibold text-white bg-white/15 hover:bg-white/25 border border-white/20 px-5 py-2.5 rounded-full transition-all duration-200 backdrop-blur-sm hover:scale-105"
+              className="flex justify-center items-center whitespace-nowrap text-[13px] sm:text-base font-semibold text-white bg-white/15 hover:bg-white/25 border border-white/20 px-2 sm:px-5 py-2.5 rounded-full transition-all duration-200 backdrop-blur-sm hover:scale-105"
             >
               {city.label}
             </Link>

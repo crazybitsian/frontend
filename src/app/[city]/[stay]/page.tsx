@@ -129,9 +129,9 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
                       <span className="text-3xl sm:text-4xl font-display font-bold text-primary tracking-tight">
                         {formatPrice(property.lowest_price)}
                       </span>
-                      {property.lowest_price && (
+                      {property.lowest_price ? (
                         <span className="text-muted-foreground font-medium">/month</span>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                   
@@ -265,9 +265,9 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
             <span className="text-lg font-bold text-primary tabular-nums">
               {formatPrice(property.lowest_price)}
             </span>
-            {property.lowest_price && (
+            {property.lowest_price ? (
               <span className="text-sm text-muted-foreground">/mo</span>
-            )}
+            ) : null}
             {sharingOptions.length > 0 && (
               <p className="text-xs text-muted-foreground">{sharingOptions[0].label}</p>
             )}
