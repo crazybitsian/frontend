@@ -3,6 +3,7 @@
 import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api/client";
+import { Property } from "@/lib/api/types";
 import { StayCard } from "@/components/StayCard";
 import { Search, BadgeCheck, Snowflake, UtensilsCrossed, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ interface CityListingClientProps {
   citySlug: string;
   cityName: string;
   initialCount?: number;
+  initialProperties?: Property[];
 }
 
 const FILTER_OPTIONS = [
@@ -30,7 +32,7 @@ const SORT_OPTIONS = [
   { value: "rating_desc", label: "Highest rating" },
 ];
 
-export function CityListingClient({ citySlug, cityName, initialCount }: CityListingClientProps) {
+export function CityListingClient({ citySlug, cityName, initialCount, initialProperties }: CityListingClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [sort, setSort] = useState("newest");
@@ -58,9 +60,11 @@ export function CityListingClient({ citySlug, cityName, initialCount }: CityList
     return { city: citySlug, q: debouncedQuery, flag, amenities, sort };
   }, [citySlug, debouncedQuery, activeFilters, sort]);
 
+  const isDefaultQuery = debouncedQuery === "" && activeFilters.length === 0 && sort === "newest";
   const { data: properties, isLoading, isError, refetch } = useQuery({
     queryKey: ["properties", citySlug, debouncedQuery, activeFilters, sort],
     queryFn: () => api.getProperties(getFilterParams()),
+    initialData: isDefaultQuery ? initialProperties : undefined,
   });
 
   return (
@@ -188,13 +192,13 @@ export function CityListingClient({ citySlug, cityName, initialCount }: CityList
       {!isLoading && !isError && properties && properties.length > 0 && (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {properties.map((property) => (
+            {properties.map((property, index) => (
               <Link
                 href={`/${citySlug}/${property.slug}`}
                 key={property.id || property.slug}
                 className="block outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-[14px]"
               >
-                <StayCard property={property} />
+                <StayCard property={property} priorityImage={index < 4} />
               </Link>
             ))}
           </div>

@@ -13,6 +13,18 @@ import { StayGallery } from "@/components/StayGallery";
 
 export const revalidate = 3600;
 
+export async function generateStaticParams() {
+  try {
+    const properties = await api.getProperties();
+    return properties.map((property) => ({
+      city: property.city_slug || 'other',
+      stay: property.slug,
+    }));
+  } catch (e) {
+    return [];
+  }
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ city: string; stay: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
   try {

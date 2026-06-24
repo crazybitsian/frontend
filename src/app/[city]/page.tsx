@@ -5,8 +5,20 @@ import { Footer } from "@/components/Footer";
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { Property } from "@/lib/api/types";
 
 export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  try {
+    const cities = await api.getCities();
+    return cities.map((city) => ({
+      city: city.slug,
+    }));
+  } catch (e) {
+    return [];
+  }
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
@@ -27,7 +39,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   const resolvedParams = await params;
   
   let cityInfo = null;
-  let initialProperties = [];
+  let initialProperties: Property[] = [];
   try {
     const cities = await api.getCities();
     cityInfo = cities.find(c => c.slug === resolvedParams.city);
@@ -74,6 +86,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             citySlug={resolvedParams.city}
             cityName={cityName}
             initialCount={initialProperties.length}
+            initialProperties={initialProperties}
           />
         </div>
       </main>

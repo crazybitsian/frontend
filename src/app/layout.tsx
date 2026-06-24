@@ -38,9 +38,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${bricolage.variable} ${inter.variable} ${dmSans.variable} antialiased`}
     >
-      <body className="min-h-screen bg-background text-foreground font-sans">
+      <body suppressHydrationWarning className="min-h-screen bg-background text-foreground font-sans">
         <QueryProvider>
           <TooltipProvider>
             {children}
