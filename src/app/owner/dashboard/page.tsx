@@ -55,8 +55,9 @@ export default function OwnerDashboard() {
 
         const data = await res.json();
         setProperties(data || []);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        if (err instanceof Error) setError(err.message);
+        else setError("An unknown error occurred");
       } finally {
         setIsLoading(false);
       }
@@ -171,7 +172,7 @@ export default function OwnerDashboard() {
                 </div>
                 <h3 className="text-xl font-bold font-display text-foreground mb-2">No properties yet</h3>
                 <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
-                  You haven't listed any properties. Add your first property to start receiving leads from students.
+                  You haven&apos;t listed any properties. Add your first property to start receiving leads from students.
                 </p>
                 <button 
                   onClick={() => alert("Contact support")}

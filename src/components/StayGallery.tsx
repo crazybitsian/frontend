@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { ChevronUp, LayoutGrid, ArrowRight, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronUp, LayoutGrid, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface StayGalleryProps {

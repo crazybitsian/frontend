@@ -4,7 +4,6 @@ import Image from "next/image";
 import { Footer } from "@/components/Footer";
 import { Mail, Download, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 export default function PrivacyPolicyPage() {
   const [activeSection, setActiveSection] = useState("collect");

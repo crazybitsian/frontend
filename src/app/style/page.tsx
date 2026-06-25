@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -29,7 +29,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BadgeCheck, Moon, Sun, Laptop } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 
 // Mock stays matching Indian student context
 const MOCK_PROPERTIES: Property[] = [
@@ -244,7 +244,7 @@ export default function StylePage() {
             <div className="border-t border-border/60 pt-3">
               <p className="text-xs text-muted-foreground mb-1">Body Text (Inter)</p>
               <p className="text-sm text-foreground leading-relaxed">
-                Experience premium, verified student and professional accommodations across India's top cities. Zero brokerage.
+                Experience premium, verified student and professional accommodations across India&apos;s top cities. Zero brokerage.
               </p>
             </div>
             <div className="border-t border-border/60 pt-3">

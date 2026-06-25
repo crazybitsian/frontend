@@ -7,7 +7,7 @@ export function RecentlyViewedTracker({ propertySlug }: { propertySlug: string }
     try {
       const stored = JSON.parse(localStorage.getItem("apnakamra_recently_viewed") || "[]");
       // filter out old numeric IDs just in case, and remove current slug if it exists
-      let valid = stored.filter((item: any) => typeof item === 'string' && Number.isNaN(Number(item)) && item !== propertySlug);
+      let valid = stored.filter((item: unknown) => typeof item === 'string' && Number.isNaN(Number(item)) && item !== propertySlug);
       
       // add to start
       valid.unshift(propertySlug);

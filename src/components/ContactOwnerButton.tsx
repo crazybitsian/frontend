@@ -25,7 +25,7 @@ export function ContactOwnerButton({ property, className, variant = "full" }: Co
       // Record inquiry
       const stored = JSON.parse(localStorage.getItem("apnakamra_inquiries") || "[]");
       // filter out if already inquired for this property, keep others
-      let inquiries = stored.filter((inquiry: any) => inquiry.slug !== property.slug);
+      const inquiries = stored.filter((inquiry: { slug: string }) => inquiry.slug !== property.slug);
       
       inquiries.unshift({
         slug: property.slug,

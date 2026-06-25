@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { Footer } from "@/components/Footer";
-import { Mail, Phone, MapPin, Share2, Globe, Send, Loader2 } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { api } from "@/lib/api/client";
 

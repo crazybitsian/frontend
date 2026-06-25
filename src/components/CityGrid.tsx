@@ -39,7 +39,7 @@ export function CityGrid({ cities }: { cities: City[] }) {
             DEFAULT_CITY_IMAGE;
 
           // Asymmetrical Mastery Layout Logic (4x3 Grid)
-          let gridClass = "";
+          let gridClass: string;
           const len = displayCities.length;
           switch (index) {
             case 0:

@@ -1,10 +1,8 @@
 import { api } from "@/lib/api/client";
 import { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import {
-  ArrowLeft, MapPin, Users, PhoneCall, ShieldCheck, Star, Share2, Heart, BedDouble,
-  Snowflake, UtensilsCrossed, Wifi, Zap, Droplets, BookOpen, ShieldAlert, CigaretteOff, Clock, UserCheck, IdCard,
+  ArrowLeft, MapPin, ShieldCheck, Star, BedDouble, CigaretteOff, Clock, UserCheck, IdCard,
 } from "lucide-react";
 import { AmenityList } from "@/components/AmenityList";
 import { Footer } from "@/components/Footer";
@@ -24,7 +22,7 @@ export async function generateStaticParams() {
       city: property.city_slug || 'other',
       stay: property.slug,
     }));
-  } catch (e) {
+  } catch {
     return [];
   }
 }
@@ -37,7 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
       title: `${property.name} in ${property.locality || resolvedParams.city} — ApnaKamra`,
       description: property.description || `Premium verified stay in ${property.locality}. Zero brokerage.`,
     };
-  } catch (e) {
+  } catch {
     return { title: "Stay Detail — ApnaKamra" };
   }
 }
@@ -48,7 +46,7 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
   let property;
   try {
     property = await api.getProperty(resolvedParams.stay);
-  } catch (e) {
+  } catch {
     notFound();
   }
 
@@ -71,7 +69,6 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
 
   const sharingOptions = getSharingOptions();
   const displayLocality = [property.locality, property.city_name].filter(x => x && x !== "Other").join(", ");
-  const heroImage = property.images?.[0] || "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1200&auto=format&fit=crop";
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">

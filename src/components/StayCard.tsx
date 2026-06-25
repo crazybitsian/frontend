@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { BadgeCheck, Heart, MapPin, Snowflake, Users, UtensilsCrossed, Star, ShieldAlert, Wifi, ChevronLeft, ChevronRight } from "lucide-react";
+import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Property } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +27,6 @@ export function StayCard({ property, isSaved = false, onSaveToggle, priorityImag
     amenities = [],
     is_trusted,
     is_featured,
-    is_unverified,
   } = property;
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);

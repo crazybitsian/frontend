@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { 
   ArrowLeft, LogOut, Heart, MapPin, Building2, 
-  Settings, Clock, IndianRupee, BedDouble, 
-  ChevronRight, BadgeCheck
+  IndianRupee, ChevronRight, BadgeCheck
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -23,9 +22,7 @@ export default function ProfilePage() {
   const [wishlistSlugs, setWishlistSlugs] = useState<string[]>([]);
   const [wishlistProperties, setWishlistProperties] = useState<Property[]>([]);
   const [isWishlistLoading, setIsWishlistLoading] = useState(false);
-  const [inquiries, setInquiries] = useState<any[]>([]);
   const [recentlyViewed, setRecentlyViewed] = useState<Property[]>([]);
-  const [preferences, setPreferences] = useState<any>(null);
 
   useEffect(() => {
     const mobile = localStorage.getItem("apnakamra_user");
@@ -41,7 +38,7 @@ export default function ProfilePage() {
       const storedItems = JSON.parse(localStorage.getItem("apnakamra_wishlist") || "[]");
       
       // Migrate old data: filter out any numeric IDs that were stored previously
-      const validSlugs = storedItems.filter((item: any) => typeof item === 'string' && Number.isNaN(Number(item)));
+      const validSlugs = storedItems.filter((item: unknown) => typeof item === 'string' && Number.isNaN(Number(item)));
       
       if (validSlugs.length !== storedItems.length) {
         localStorage.setItem("apnakamra_wishlist", JSON.stringify(validSlugs));
@@ -52,7 +49,7 @@ export default function ProfilePage() {
       if (validSlugs.length > 0) {
         setIsWishlistLoading(true);
         try {
-          const props = await Promise.all(
+          const resolvedProperties = await Promise.all(
             validSlugs.map((slug: string) => 
               api.getProperty(slug).catch((e) => {
                 console.warn(`Failed to fetch property ${slug}:`, e);
@@ -60,7 +57,7 @@ export default function ProfilePage() {
               })
             )
           );
-          setWishlistProperties(props.filter(Boolean));
+          setWishlistProperties(resolvedProperties.filter(Boolean) as Property[]);
         } catch(e) {
           console.error(e);
         }
@@ -71,28 +68,22 @@ export default function ProfilePage() {
     };
     loadWishlist();
 
-    const storedInquiries = JSON.parse(localStorage.getItem("apnakamra_inquiries") || "[]");
-    setInquiries(storedInquiries);
-
     const loadRecentlyViewed = async () => {
       const storedRV = JSON.parse(localStorage.getItem("apnakamra_recently_viewed") || "[]");
       if (storedRV.length > 0) {
         try {
-          const props = await Promise.all(
+          const resolvedRVProps = await Promise.all(
             storedRV.map((slug: string) => 
               api.getProperty(slug).catch(() => null)
             )
           );
-          setRecentlyViewed(props.filter(Boolean));
+          setRecentlyViewed(resolvedRVProps.filter(Boolean) as Property[]);
         } catch (e) {
           console.error(e);
         }
       }
     };
     loadRecentlyViewed();
-
-    const storedPrefs = JSON.parse(localStorage.getItem("apnakamra_preferences") || "null");
-    setPreferences(storedPrefs);
 
     const handleWishlistUpdate = () => {
       loadWishlist();
@@ -134,7 +125,7 @@ export default function ProfilePage() {
             </Link>
             <div>
               <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">
-                {userName}'s Portal
+                {userName}&apos;s Portal
               </h1>
               <p className="text-muted-foreground text-sm flex items-center gap-2">
                 +91 {userMobile} 
@@ -277,7 +268,7 @@ export default function ProfilePage() {
               <div className="bg-card border border-border rounded-3xl p-16 text-center shadow-sm">
                 <Heart className="w-16 h-16 text-muted-foreground/30 mx-auto mb-6" />
                 <p className="text-muted-foreground max-w-md mx-auto mb-8">
-                  Properties you've saved will appear here. Build your collection of premium stays.
+                  Properties you&apos;ve saved will appear here. Build your collection of premium stays.
                 </p>
                 <Link 
                   href="/"

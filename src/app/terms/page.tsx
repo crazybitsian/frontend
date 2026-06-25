@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Footer } from "@/components/Footer";
 import { ShieldCheck, CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";

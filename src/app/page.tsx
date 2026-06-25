@@ -2,7 +2,6 @@ import { api } from "@/lib/api/client";
 import { CityHero } from "@/components/CityHero";
 import { CityGrid } from "@/components/CityGrid";
 import { FeaturedStays } from "@/components/FeaturedStays";
-import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BadgeCheck, Banknote, Users } from "lucide-react";
 import { City, Property } from "@/lib/api/types";

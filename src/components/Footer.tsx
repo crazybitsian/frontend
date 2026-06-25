@@ -28,7 +28,7 @@ export function Footer() {
               ApnaKamra
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-white/50">
-              Find verified hostels, PGs, and shared rooms in India's top student cities. Zero brokerage, always.
+              Find verified hostels, PGs, and shared rooms in India&apos;s top student cities. Zero brokerage, always.
             </p>
           </div>
 

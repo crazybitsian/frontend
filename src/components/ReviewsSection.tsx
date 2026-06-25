@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Star, ThumbsUp, Quote } from "lucide-react";
+import { Star, ThumbsUp } from "lucide-react";
 
 interface Review {
   id: number;

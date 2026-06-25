@@ -40,8 +40,9 @@ export default function OwnerLoginPage() {
       router.push("/owner/dashboard");
       router.refresh();
       
-    } catch (err: any) {
-      setError(err.message || "Failed to login. Please try again.");
+    } catch (err) {
+      if (err instanceof Error) setError(err.message || "Failed to login. Please try again.");
+      else setError("Failed to login. Please try again.");
     } finally {
       setIsLoading(false);
     }

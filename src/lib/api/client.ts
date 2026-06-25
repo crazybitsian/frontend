@@ -76,6 +76,6 @@ export const api = {
     apiGet<Property[]>(`/owner/properties?mobile=${encodeURIComponent(mobile)}&password=${encodeURIComponent(password)}`),
     
   getOwnerLeads: (mobile: string, password: string) => 
-    apiGet<any[]>(`/owner/property-visitors?mobile=${encodeURIComponent(mobile)}&password=${encodeURIComponent(password)}`),
+    apiGet<Record<string, unknown>[]>(`/owner/property-visitors?mobile=${encodeURIComponent(mobile)}&password=${encodeURIComponent(password)}`),
 };
 export type ApiClient = typeof api;

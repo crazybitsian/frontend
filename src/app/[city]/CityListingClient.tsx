@@ -3,12 +3,12 @@
 import React, { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api/client";
-import { Property } from "@/lib/api/types";
+import { Property, City } from "@/lib/api/types";
 import { StayCard } from "@/components/StayCard";
 import { useRouter } from "next/navigation";
-import { Search, BadgeCheck, Snowflake, UtensilsCrossed, ChevronDown, MapPin, SlidersHorizontal, ArrowLeft, X } from "lucide-react";
+import { Search, BadgeCheck, Snowflake, UtensilsCrossed, MapPin, SlidersHorizontal, ArrowLeft, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { useDebounce } from "@/hooks/use-debounce";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,17 +18,11 @@ import Fuse from "fuse.js";
 interface CityListingClientProps {
   citySlug: string;
   cityName: string;
-  cities?: any[];
-  initialCount?: number;
+  cities?: City[];
   initialProperties?: Property[];
 }
 
-const FILTER_OPTIONS = [
-  { id: "all", label: "All Stays", icon: null },
-  { id: "verified", label: "Verified", icon: BadgeCheck },
-  { id: "ac", label: "AC Rooms", icon: Snowflake },
-  { id: "food", label: "Food", icon: UtensilsCrossed },
-];
+
 
 const SORT_OPTIONS = [
   { value: "newest", label: "Newest first" },
@@ -44,7 +38,7 @@ const formatCityName = (name: string) => {
   ).join(" ");
 };
 
-export function CityListingClient({ citySlug, cityName, cities = [], initialCount, initialProperties }: CityListingClientProps) {
+export function CityListingClient({ citySlug, cityName, cities = [], initialProperties }: CityListingClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [sort, setSort] = useState("newest");
@@ -89,7 +83,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialCoun
 
   const getFilterParams = useCallback(() => {
     let flag = "";
-    let amenitiesArr: string[] = [];
+    const amenitiesArr: string[] = [];
     if (activeFilters.includes("verified")) flag = "trusted";
     if (activeFilters.includes("ac")) amenitiesArr.push("AC");
     if (activeFilters.includes("food")) amenitiesArr.push("Meals Included");
@@ -130,216 +124,247 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialCoun
 
   return (
     <div>
-      {/* Floating Command Center (Sticky) */}
-      <div className="fixed top-4 left-0 right-0 z-50 px-4 pointer-events-none flex justify-center">
-        <div className="pointer-events-auto flex items-center bg-white/95 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-black/5 rounded-[100px] p-2 w-full max-w-3xl transition-all duration-300">
+      {/* Premium Sticky Navigation Bar (Stitch Design) */}
+      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-border/40 mb-8 transition-all duration-300">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4 md:gap-8">
           
-          {/* Back Button (Mobile Only) */}
-          <Link href="/" className="md:hidden flex items-center justify-center h-11 w-11 rounded-full hover:bg-black/5 transition-colors shrink-0 mr-1">
-            <ArrowLeft className="h-5 w-5 text-foreground" />
-          </Link>
+          {/* Left: Brand / Mobile Back Button */}
+          <div className="flex-shrink-0 flex items-center">
+            <Link href="/" className="md:hidden flex items-center justify-center h-10 w-10 rounded-full hover:bg-black/5 transition-colors mr-2">
+              <ArrowLeft className="h-5 w-5 text-foreground" />
+            </Link>
+            <Link href="/" className="hidden md:block font-display font-bold text-primary tracking-tighter text-2xl">
+              ApnaKamra
+            </Link>
+          </div>
 
-          {/* City Dropdown */}
-          <div className="shrink-0">
-            <Select value={citySlug} onValueChange={(val) => router.push(`/${val}`)}>
-              <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-black/5 focus:ring-0 rounded-[100px] h-11 px-3 sm:px-5 font-semibold text-foreground text-[15px]">
+          {/* Center: Search Pill */}
+          <div className="flex-1 max-w-2xl hidden sm:flex justify-center">
+            <div className="w-full flex items-center bg-white border border-border/80 rounded-full px-2 py-1.5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_4px_6px_-2px_rgba(0,0,0,0.05)] transition-shadow hover:shadow-md">
+              {/* City Selector */}
+              <Select value={citySlug} onValueChange={(val) => router.push(`/${val}`)}>
+                <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-muted focus:ring-0 rounded-full h-auto py-1 px-4 text-sm font-medium transition-colors cursor-pointer w-auto flex-shrink-0">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-[20px] w-[20px] text-primary" />
+                    <span className="font-medium text-sm">{formatCityName(cityName)}</span>
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="rounded-[24px] shadow-[0_24px_80px_-12px_rgba(0,0,0,0.15)] border-border/40 p-4 min-w-[320px] sm:min-w-[420px] bg-white/95 backdrop-blur-3xl" alignItemWithTrigger={false} align="start" sideOffset={16}>
+                  <div className="px-3 pb-3 mb-3 border-b border-border/60 flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/70">Select Destination</span>
+                    <span className="text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full uppercase tracking-wide">{cities.length} Cities</span>
+                  </div>
+                  <SelectGroup className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {cities.map((city, index) => {
+                      const gradients = [
+                        "from-emerald-100 to-teal-50",
+                        "from-blue-100 to-indigo-50",
+                        "from-rose-100 to-orange-50",
+                        "from-amber-100 to-yellow-50",
+                        "from-purple-100 to-fuchsia-50",
+                        "from-sky-100 to-cyan-50"
+                      ];
+                      const gradient = gradients[index % gradients.length];
+                      
+                      return (
+                        <SelectItem 
+                          key={city.slug} 
+                          value={city.slug}
+                          className="p-2 cursor-pointer rounded-2xl hover:bg-black/5 focus:bg-black/5 transition-colors duration-200"
+                        >
+                          <div className="flex items-center gap-3.5 pr-2 w-full">
+                            <div className={`h-11 w-11 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center shadow-sm border border-black/5 shrink-0 overflow-hidden relative isolate`}>
+                              {city.image ? (
+                                <img src={city.image} alt={city.name} className="h-full w-full object-cover" />
+                              ) : (
+                                <span className="font-bold text-foreground/50 text-lg uppercase">{city.name.charAt(0)}</span>
+                              )}
+                            </div>
+                            <div className="flex flex-col items-start overflow-hidden">
+                              <span className="font-semibold text-[14px] text-foreground truncate w-full">{formatCityName(city.name)}</span>
+                            </div>
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              {/* Divider */}
+              <div className="w-[1px] h-6 bg-border mx-1 flex-shrink-0"></div>
+
+              {/* Input Area */}
+              <div className="flex-1 px-4">
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by area..."
+                  className="w-full h-auto p-0 bg-transparent border-none focus-visible:ring-0 text-sm placeholder:text-muted-foreground shadow-none"
+                />
+              </div>
+
+              {/* Search Button */}
+              <div className="bg-primary hover:bg-[#125633] text-white w-10 h-10 rounded-full flex items-center justify-center transition-all active:scale-95 flex-shrink-0 shadow-sm cursor-pointer">
+                <Search className="h-[20px] w-[20px]" />
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Filter & Sort Actions */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <button
+              suppressHydrationWarning
+              onClick={() => setIsFilterModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 border border-border/80 rounded-full text-sm font-medium hover:bg-muted transition-colors bg-white cursor-pointer"
+            >
+              <SlidersHorizontal className="h-[18px] w-[18px]" />
+              <span className="hidden sm:inline">Filters</span>
+              {(activeFilters.length > 0 || minBudget > 0 || maxBudget < 30000) && (
+                <span className="bg-primary w-2 h-2 rounded-full hidden sm:inline" />
+              )}
+            </button>
+            
+            <Select value={sort} onValueChange={(val) => setSort(val || "newest")}>
+              <SelectTrigger className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 border border-border/80 rounded-full text-sm font-medium hover:bg-muted transition-colors bg-white cursor-pointer w-auto shadow-none focus:ring-0">
                 <div className="flex items-center gap-1.5">
-                  <MapPin className="h-4.5 w-4.5 text-primary hidden sm:block" />
-                  <span>{formatCityName(cityName)}</span>
+                  <span className="hidden lg:inline text-muted-foreground">Sort:</span>
+                  <span className="truncate">{SORT_OPTIONS.find(o => o.value === sort)?.label || "Newest first"}</span>
                 </div>
               </SelectTrigger>
-              <SelectContent alignItemWithTrigger={false} className="rounded-[24px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] border-border/40 p-4 min-w-[320px] sm:min-w-[420px] bg-white/95 backdrop-blur-3xl" align="start" sideOffset={32}>
-                <div className="px-2 pb-3 mb-3 border-b border-border/60 flex items-center justify-between">
-                  <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/70">Select Destination</span>
-                  <span className="text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full uppercase tracking-wide">{cities.length} Cities</span>
-                </div>
-                <SelectGroup className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {cities.map((city, index) => {
-                    const gradients = [
-                      "from-emerald-100 to-teal-50",
-                      "from-blue-100 to-indigo-50",
-                      "from-rose-100 to-orange-50",
-                      "from-amber-100 to-yellow-50",
-                      "from-purple-100 to-fuchsia-50",
-                      "from-sky-100 to-cyan-50"
-                    ];
-                    const gradient = gradients[index % gradients.length];
-                    
-                    return (
-                      <SelectItem 
-                        key={city.slug} 
-                        value={city.slug}
-                        className="p-2 cursor-pointer rounded-2xl hover:bg-black/5 focus:bg-black/5 transition-all duration-300 group"
-                      >
-                        <div className="flex items-center gap-3.5 pr-2">
-                          <div className={`h-11 w-11 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center shadow-sm border border-black/5 shrink-0 overflow-hidden`}>
-                            {city.image ? (
-                              <img src={city.image} alt={city.name} className="h-full w-full rounded-full object-cover" />
-                            ) : (
-                              <span className="font-bold text-foreground/40 text-lg uppercase">{city.name.charAt(0)}</span>
-                            )}
-                          </div>
-                          <div className="flex flex-col items-start">
-                            <span className="font-semibold text-[14px] text-foreground group-hover:text-primary transition-colors">{formatCityName(city.name)}</span>
-                          </div>
-                        </div>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectGroup>
+              <SelectContent className="rounded-[20px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] border-border/50 p-2" alignItemWithTrigger={false} align="end" sideOffset={12}>
+                {SORT_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value} className="cursor-pointer rounded-xl font-medium py-3 px-4 hover:bg-muted/50 transition-colors">
+                    {opt.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
+        </div>
 
-          <div className="w-px h-6 bg-border mx-1 sm:mx-2 shrink-0" />
-
-          {/* Search Input */}
-          <div className="flex-1 relative flex items-center h-11">
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search localities..."
-              className="h-full w-full border-0 bg-transparent shadow-none focus-visible:ring-0 px-2 sm:px-4 text-[15px] placeholder:text-muted-foreground/70"
-            />
-          </div>
-
-          {/* Search Icon (Non-interactive) */}
-          <div className="shrink-0 ml-1">
-            <div className="flex items-center justify-center h-11 w-11 rounded-full bg-primary text-primary-foreground shadow-sm">
-              <Search className="h-5 w-5" />
+        {/* Mobile Search Pill (Below Header on Mobile) */}
+        <div className="sm:hidden px-4 pb-4">
+          <div className="w-full flex items-center bg-white border border-border/80 rounded-full px-2 py-1.5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_4px_6px_-2px_rgba(0,0,0,0.05)] transition-shadow hover:shadow-md">
+            <Select value={citySlug} onValueChange={(val) => router.push(`/${val}`)}>
+              <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-muted focus:ring-0 rounded-full h-auto py-1 px-3 text-sm font-medium transition-colors cursor-pointer w-auto flex-shrink-0">
+                <MapPin className="h-4 w-4 text-primary" />
+              </SelectTrigger>
+              <SelectContent className="rounded-2xl shadow-xl border-border p-2 min-w-[200px]">
+                <SelectGroup className="flex flex-col gap-1 p-1">
+                  {cities.map((city) => (
+                    <SelectItem key={city.slug} value={city.slug} className="cursor-pointer rounded-xl font-medium px-4 py-3">
+                      {formatCityName(city.name)}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <div className="w-[1px] h-6 bg-border mx-1 flex-shrink-0"></div>
+            <div className="flex-1 px-2">
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by area..."
+                className="w-full h-auto p-0 bg-transparent border-none focus-visible:ring-0 text-sm placeholder:text-muted-foreground shadow-none"
+              />
+            </div>
+            <div className="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm cursor-pointer">
+              <Search className="h-4 w-4" />
             </div>
           </div>
         </div>
       </div>
+      {/* Main Content Area */}
+      <div className="container mx-auto px-4 max-w-6xl py-4">
+        {/* Results Count */}
+        {!isLoading && !isError && filteredProperties && (
+          <p className="text-[15px] font-semibold text-foreground mb-4 flex items-center gap-2">
+            <span>{filteredProperties.length} {filteredProperties.length === 1 ? "stay" : "stays"} found</span>
+            <span className="h-px bg-border flex-1 ml-4" />
+          </p>
+        )}
 
-      {/* Sort & Filter */}
-      <div className="flex items-center justify-end gap-4 mb-4 mt-2">
-        {/* Premium Sort & Filter */}
-        <div className="shrink-0 z-10 flex items-center gap-2">
-          
-          {/* Advanced Filters Button */}
-          <button
-            onClick={() => setIsFilterModalOpen(true)}
-            className="flex items-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-semibold transition-all bg-white border border-border/60 text-foreground hover:bg-muted/50 hover:border-border"
-          >
-            <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
-            Filters
-            {(activeFilters.length > 0 || minBudget > 0 || maxBudget < 30000) && (
-              <span className="ml-1 bg-primary w-2 h-2 rounded-full" />
-            )}
-          </button>
-
-          {/* Premium Sort Dropdown */}
-          <div className="hidden sm:block">
-            <Select value={sort} onValueChange={(val) => setSort(val || "newest")}>
-            <SelectTrigger className="w-fit h-auto rounded-full px-5 py-2.5 bg-transparent border-0 shadow-none hover:bg-muted/50 transition-all focus:ring-0 outline-none">
-              <div className="flex items-center gap-2 font-medium text-[14px]">
-                <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Sort:</span>
-                <span className="text-foreground">{SORT_OPTIONS.find(o => o.value === sort)?.label || "Newest first"}</span>
+        {/* Loading Skeletons */}
+        {isLoading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-12 sm:gap-y-16">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="animate-pulse flex flex-col overflow-hidden">
+                <div className="bg-muted aspect-[20/19] w-full rounded-[16px] mb-3" />
+                <div className="space-y-3">
+                  <div className="h-5 bg-muted rounded w-1/3" />
+                  <div className="h-4 bg-muted rounded w-3/4" />
+                  <div className="h-4 bg-muted rounded w-1/2" />
+                </div>
               </div>
-            </SelectTrigger>
-            <SelectContent className="rounded-2xl shadow-xl border-border p-1" alignItemWithTrigger={false} align="end" sideOffset={8}>
-              {SORT_OPTIONS.map((opt) => (
-                <SelectItem 
-                  key={opt.value} 
-                  value={opt.value}
-                  className="py-3 px-4 cursor-pointer rounded-xl hover:bg-muted/50 focus:bg-muted/50 font-medium transition-colors"
-                >
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          </div>
-        </div>
-      </div>
-
-      {/* Results Count */}
-      {!isLoading && !isError && filteredProperties && (
-        <p className="text-[15px] font-semibold text-foreground mb-4 flex items-center gap-2">
-          <span>{filteredProperties.length} {filteredProperties.length === 1 ? "stay" : "stays"} found</span>
-          <span className="h-px bg-border flex-1 ml-4" />
-        </p>
-      )}
-
-      {/* Loading Skeletons */}
-      {isLoading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-12 sm:gap-y-16">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="animate-pulse flex flex-col overflow-hidden">
-              <div className="bg-muted aspect-[20/19] w-full rounded-[16px] mb-3" />
-              <div className="space-y-3">
-                <div className="h-5 bg-muted rounded w-1/3" />
-                <div className="h-4 bg-muted rounded w-3/4" />
-                <div className="h-4 bg-muted rounded w-1/2" />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Error State */}
-      {isError && (
-        <div className="py-16 px-6 text-center border border-border/50 rounded-[24px] bg-card max-w-md mx-auto mt-8">
-          <p className="text-foreground font-semibold mb-2 text-lg">Couldn't load rooms</p>
-          <p className="text-muted-foreground mb-6">Check your connection and try again.</p>
-          <button
-            onClick={() => refetch()}
-            className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-          >
-            Retry
-          </button>
-        </div>
-      )}
-      {/* Results Grid */}
-      {!isLoading && !isError && filteredProperties && filteredProperties.length > 0 && (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-8 sm:gap-y-12">
-            {filteredProperties.map((property, index) => (
-              <Link
-                href={`/${citySlug}/${property.slug}`}
-                key={property.id || property.slug}
-                className="block outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-[16px]"
-              >
-                <StayCard 
-                  property={property} 
-                  priorityImage={index < 4} 
-                  isSaved={wishlist.includes(property.slug)}
-                  onSaveToggle={handleSaveToggle}
-                />
-              </Link>
             ))}
           </div>
-          
-          <div className="mt-16 text-center pb-8">
-            <p className="text-muted-foreground font-medium">You've reached the end of the list</p>
-          </div>
-        </>
-      )}
+        )}
 
-      {!isLoading && !isError && filteredProperties && filteredProperties.length === 0 && (
-        <div className="py-24 text-center">
-          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
-            <Search className="h-6 w-6 text-muted-foreground" />
+        {/* Error State */}
+        {isError && (
+          <div className="py-16 px-6 text-center border border-border/50 rounded-[24px] bg-card max-w-md mx-auto mt-8">
+            <p className="text-foreground font-semibold mb-2 text-lg">Couldn&apos;t load rooms</p>
+            <p className="text-muted-foreground mb-6">Check your connection and try again.</p>
+            <button
+              onClick={() => refetch()}
+              className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+            >
+              Retry
+            </button>
           </div>
-          <h3 className="text-xl font-bold font-display mb-2">No rooms match these filters</h3>
-          <p className="text-muted-foreground max-w-sm mx-auto mb-8">
-            Try widening your search area or removing some filters to see more results.
-          </p>
-          <button
-            onClick={() => {
-              setSearchQuery("");
-              setActiveFilters([]);
-              setMinBudget(0);
-              setMaxBudget(30000);
-            }}
-            className="px-6 py-3 bg-card border border-border text-foreground rounded-xl font-semibold hover:bg-muted transition-colors shadow-sm"
-          >
-            Clear all filters
-          </button>
-        </div>
-      )}
+        )}
+
+        {/* Results Grid */}
+        {!isLoading && !isError && filteredProperties && filteredProperties.length > 0 && (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-8 sm:gap-y-12">
+              {filteredProperties.map((property, index) => (
+                <Link
+                  href={`/${citySlug}/${property.slug}`}
+                  key={property._id || property.slug}
+                  className="block outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-[16px]"
+                >
+                  <StayCard 
+                    property={property} 
+                    priorityImage={index < 4} 
+                    isSaved={wishlist.includes(property.slug)}
+                    onSaveToggle={handleSaveToggle}
+                  />
+                </Link>
+              ))}
+            </div>
+            
+            <div className="mt-16 text-center pb-8">
+              <p className="text-muted-foreground font-medium">You&apos;ve reached the end of the list</p>
+            </div>
+          </>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && !isError && filteredProperties && filteredProperties.length === 0 && (
+          <div className="py-24 text-center">
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
+              <Search className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <h3 className="text-xl font-bold font-display mb-2">No rooms match these filters</h3>
+            <p className="text-muted-foreground max-w-sm mx-auto mb-8">
+              Try widening your search area or removing some filters to see more results.
+            </p>
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setActiveFilters([]);
+                setMinBudget(0);
+                setMaxBudget(30000);
+              }}
+              className="px-6 py-3 bg-card border border-border text-foreground rounded-xl font-semibold hover:bg-muted transition-colors shadow-sm"
+            >
+              Clear all filters
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Ultra-Premium Advanced Filters Modal */}
       <AnimatePresence>

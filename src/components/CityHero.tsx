@@ -319,7 +319,7 @@ export function CityHero({ cities }: CityHeroProps) {
                     <Search className="h-6 w-6 text-primary/40" />
                   </div>
                   <p className="text-foreground font-display text-lg font-bold tracking-tight">No matches found</p>
-                  <p className="text-muted-foreground text-[14.5px]">We couldn't find any cities or properties matching "{query}"</p>
+                  <p className="text-muted-foreground text-[14.5px]">We couldn&apos;t find any cities or properties matching &quot;{query}&quot;</p>
                 </div>
               )}
             </div>
