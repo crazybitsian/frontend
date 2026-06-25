@@ -46,10 +46,10 @@ export function Navbar() {
         {/* Mobile Menu Toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden flex items-center justify-center h-10 w-10 rounded-lg hover:bg-muted transition-colors"
+          className="md:hidden flex items-center justify-center size-10 rounded-lg hover:bg-muted transition-colors"
           aria-label="Menu"
         >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
       </div>
 

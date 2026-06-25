@@ -33,7 +33,7 @@ export function UserProfile({ variant = "default" }: UserProfileProps) {
           ? "bg-white/10 text-white border border-white/20" 
           : "bg-muted text-foreground border border-border"
       )}>
-        <User className="w-4 h-4" />
+        <User className="size-4" />
         <span>Loading</span>
       </div>
     );
@@ -49,7 +49,7 @@ export function UserProfile({ variant = "default" }: UserProfileProps) {
           : "bg-muted/50 hover:bg-muted text-foreground border border-border"
       )}
     >
-      <User className="w-4 h-4" />
+      <User className="size-4" />
       <span>{isLoggedIn ? userName.split(' ')[0] : "My Profile"}</span>
     </Link>
   );

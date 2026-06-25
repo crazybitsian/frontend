@@ -53,7 +53,7 @@ export function ContactOwnerButton({ property, className, variant = "full" }: Co
           error ? "bg-destructive/10 text-destructive hover:bg-destructive/20" : "bg-primary hover:bg-primary/90 text-primary-foreground",
           className)}
       >
-        <PhoneCall className="h-4 w-4" />
+        <PhoneCall className="size-4" />
         {error ? "Contact support" : "Contact owner"}
       </button>
     );
@@ -66,7 +66,7 @@ export function ContactOwnerButton({ property, className, variant = "full" }: Co
         error ? "bg-destructive/10 text-destructive hover:bg-destructive/20 shadow-none" : "bg-primary text-primary-foreground hover:opacity-90 active:scale-95 shadow-lg shadow-primary/20",
         className)}
     >
-      <PhoneCall className="w-5 h-5" />
+      <PhoneCall className="size-5" />
       {error ? "Owner contact unavailable. Email help@apnakamra.com" : "Contact owner"}
     </button>
   );

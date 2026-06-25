@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { 
-  ArrowLeft, LogOut, Heart, MapPin, Building2, 
+  ArrowLeft, LogOut, Heart, MapPin, 
   IndianRupee, ChevronRight, BadgeCheck
 } from "lucide-react";
 import Link from "next/link";
@@ -119,9 +119,9 @@ export default function ProfilePage() {
           <div className="flex items-center gap-6">
             <Link 
               href="/"
-              className="flex items-center justify-center w-10 h-10 rounded-full bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-all shadow-sm hover:shadow-md"
+              className="flex items-center justify-center size-10 rounded-full bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-all shadow-sm hover:shadow-md"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="size-5" />
             </Link>
             <div>
               <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">
@@ -129,9 +129,9 @@ export default function ProfilePage() {
               </h1>
               <p className="text-muted-foreground text-sm flex items-center gap-2">
                 +91 {userMobile} 
-                <span className="w-1 h-1 rounded-full bg-border" />
+                <span className="size-1 rounded-full bg-border" />
                 <span className="text-primary flex items-center gap-1 font-medium">
-                  <BadgeCheck className="w-3.5 h-3.5" /> Verified
+                  <BadgeCheck className="size-3.5" /> Verified
                 </span>
               </p>
             </div>
@@ -140,14 +140,14 @@ export default function ProfilePage() {
             onClick={handleLogout}
             className="hidden md:flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10 px-4 py-2 rounded-lg transition-colors"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="size-4" />
             Sign Out
           </button>
         </div>
 
         {/* Tab Navigation */}
         <div className="container mx-auto max-w-6xl px-4 md:px-8 flex items-center gap-8 overflow-x-auto no-scrollbar border-t border-border/50 pt-2">
-          {["Overview", "Wishlist", "Inquiries"].map((tab) => (
+          {["Overview", "Wishlist"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab.toLowerCase())}
@@ -175,7 +175,7 @@ export default function ProfilePage() {
               {/* Profile Card */}
               <div className="bg-card border border-border rounded-3xl p-8 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-transparent opacity-50" />
-                <div className="w-16 h-16 rounded-full bg-background border border-border flex items-center justify-center mb-6 shadow-sm">
+                <div className="size-16 rounded-full bg-background border border-border flex items-center justify-center mb-6 shadow-sm">
                   <span className="font-display text-2xl font-bold text-primary">
                     {userName.charAt(0).toUpperCase()}
                   </span>
@@ -205,14 +205,14 @@ export default function ProfilePage() {
                       onClick={() => setActiveTab("wishlist")}
                       className="text-primary text-sm font-semibold hover:underline flex items-center"
                     >
-                      View Wishlist <ChevronRight className="w-4 h-4 ml-1" />
+                      View Wishlist <ChevronRight className="size-4 ml-1" />
                     </button>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {recentlyViewed.map((prop) => (
                       <Link href={`/${prop.city_slug || 'city'}/${prop.slug}`} key={prop.slug} className="flex gap-4 p-4 rounded-2xl bg-background border border-border hover:border-primary/50 transition-colors shadow-sm cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                        <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-muted">
+                        <div className="relative size-20 rounded-xl overflow-hidden shrink-0 bg-muted">
                           <Image
                             src={prop.images?.[0] || "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=2000&auto=format&fit=crop"}
                             alt="Room preview"
@@ -225,10 +225,10 @@ export default function ProfilePage() {
                             {prop.name}
                           </h4>
                           <p className="text-muted-foreground font-medium text-xs mb-2 flex items-center gap-1 line-clamp-1">
-                            <MapPin className="w-3 h-3 text-primary/70 shrink-0" /> {prop.locality || "Location"}
+                            <MapPin className="size-3 text-primary/70 shrink-0" /> {prop.locality || "Location"}
                           </p>
                           <p className="font-bold text-primary text-sm flex items-center">
-                            <IndianRupee className="w-3.5 h-3.5 mr-0.5" />
+                            <IndianRupee className="size-3.5 mr-0.5" />
                             {prop.lowest_price ? `${Number(prop.lowest_price).toLocaleString("en-IN")} / mo` : 'TBD'}
                           </p>
                         </div>
@@ -266,7 +266,7 @@ export default function ProfilePage() {
               </div>
             ) : (
               <div className="bg-card border border-border rounded-3xl p-16 text-center shadow-sm">
-                <Heart className="w-16 h-16 text-muted-foreground/30 mx-auto mb-6" />
+                <Heart className="size-16 text-muted-foreground/30 mx-auto mb-6" />
                 <p className="text-muted-foreground max-w-md mx-auto mb-8">
                   Properties you&apos;ve saved will appear here. Build your collection of premium stays.
                 </p>
@@ -281,15 +281,6 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {activeTab === "inquiries" && (
-          <div className="bg-card border border-border rounded-3xl p-16 text-center shadow-sm">
-            <Building2 className="w-16 h-16 text-muted-foreground/30 mx-auto mb-6" />
-            <h2 className="font-display text-3xl font-bold text-foreground mb-4">Past Inquiries</h2>
-            <p className="text-muted-foreground max-w-md mx-auto">
-              Track the status of properties you have contacted. (API integration pending).
-            </p>
-          </div>
-        )}
 
       </main>
       
@@ -299,7 +290,7 @@ export default function ProfilePage() {
           onClick={handleLogout}
           className="w-full flex items-center justify-center gap-2 py-4 bg-card border border-border rounded-xl text-foreground font-bold hover:bg-muted transition-colors shadow-sm"
         >
-          <LogOut className="w-5 h-5" />
+          <LogOut className="size-5" />
           Sign Out
         </button>
       </div>

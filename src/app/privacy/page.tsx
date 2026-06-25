@@ -3,42 +3,10 @@
 import Image from "next/image";
 import { Footer } from "@/components/Footer";
 import { Mail, Download, ShieldCheck } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useScrollSpy } from "@/hooks/useScrollSpy";
 
 export default function PrivacyPolicyPage() {
-  const [activeSection, setActiveSection] = useState("collect");
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = document.querySelectorAll("section[id]");
-      let current = "";
-      
-      sections.forEach((section) => {
-        const sectionTop = (section as HTMLElement).offsetTop;
-        if (window.pageYOffset >= sectionTop - 150) {
-          current = section.getAttribute("id") || "";
-        }
-      });
-
-      if (current) {
-        setActiveSection(current);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    const target = document.getElementById(id);
-    if (target) {
-      window.scrollTo({
-        top: target.offsetTop - 120,
-        behavior: "smooth"
-      });
-    }
-  };
+  const { activeSection, scrollToSection } = useScrollSpy("collect");
 
   return (
     <div className="flex flex-col min-h-screen bg-background scroll-smooth">
@@ -87,7 +55,7 @@ export default function PrivacyPolicyPage() {
             
             {/* Editorial Accent Box */}
             <div className="hidden lg:block p-6 bg-accent rounded-xl border border-primary/10 mt-12">
-              <ShieldCheck className="text-primary w-6 h-6 mb-3" />
+              <ShieldCheck className="text-primary size-6 mb-3" />
               <h4 className="font-display font-semibold text-primary leading-tight mb-2">Student Trust Guarantee</h4>
               <p className="text-xs text-primary/80 leading-relaxed">We never sell your data to third-party advertisers. Your information is used strictly to facilitate verified housing.</p>
             </div>
@@ -160,12 +128,12 @@ export default function PrivacyPolicyPage() {
                 <p className="text-muted-foreground mb-8 max-w-lg">If you have any questions regarding this Privacy Policy, or if you would like to exercise your right to access, delete, or modify your data, our privacy team is ready to help.</p>
                 <div className="flex flex-col md:flex-row gap-4">
                   <a className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-foreground text-white rounded-lg font-sans font-medium transition-transform active:scale-95" href="mailto:privacy@apnakamra.com">
-                    <Mail className="w-4 h-4" />
+                    <Mail className="size-4" />
                     privacy@apnakamra.com
                   </a>
                   <button className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-card border border-border text-foreground rounded-lg font-sans font-medium transition-transform active:scale-95">
                     Download PDF Policy
-                    <Download className="w-4 h-4" />
+                    <Download className="size-4" />
                   </button>
                 </div>
               </div>

@@ -69,6 +69,7 @@ export function CityHero({ cities }: CityHeroProps) {
     let mounted = true;
     api.getProperties().then((data) => {
       if (mounted) setAllProperties(data);
+      return data;
     }).catch((err) => {
       console.warn("Could not pre-fetch properties for search", err);
     });
@@ -211,7 +212,7 @@ export function CityHero({ cities }: CityHeroProps) {
       </div>
 
       {/* Top Navbar Overlay */}
-      <div className="absolute top-0 left-0 right-0 z-20">
+      <div className="absolute top-0 inset-x-0 z-20">
         <div className="container mx-auto px-4 max-w-6xl flex items-center justify-between h-16">
           <Link
             href="/"
@@ -220,10 +221,10 @@ export function CityHero({ cities }: CityHeroProps) {
             ApnaKamra
           </Link>
           <button
-            className="md:hidden flex items-center justify-center h-10 w-10 rounded-lg text-white/80 hover:text-white transition-colors"
+            className="md:hidden flex items-center justify-center size-10 rounded-lg text-white/80 hover:text-white transition-colors"
             aria-label="Menu"
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="size-5" />
           </button>
           <nav className="hidden md:flex items-center gap-6">
             <UserProfile variant="transparent" />
@@ -264,7 +265,7 @@ export function CityHero({ cities }: CityHeroProps) {
           className="flex flex-col sm:flex-row gap-2 w-full max-w-4xl bg-white/[0.1] backdrop-blur-xl border border-white/[0.15] p-2.5 rounded-2xl relative z-50"
         >
           <div className="relative flex-1 flex items-center">
-            <Search className="absolute left-5 h-5 w-5 text-white/50 z-10" />
+            <Search className="absolute left-5 size-5 text-white/50 z-10" />
             <Input
               value={query}
               onChange={(e) => {
@@ -288,7 +289,7 @@ export function CityHero({ cities }: CityHeroProps) {
 
           {/* Real-time Autocomplete Dropdown */}
           {showDropdown && query.trim().length >= 2 && (
-            <div className="absolute top-[calc(100%+8px)] left-0 right-0 bg-white rounded-2xl overflow-hidden border border-black/5 shadow-2xl z-50 text-left origin-top animate-in fade-in zoom-in-95 duration-200">
+            <div className="absolute top-[calc(100%+8px)] inset-x-0 bg-white rounded-2xl overflow-hidden border border-black/5 shadow-2xl z-50 text-left origin-top animate-in fade-in zoom-in-95 duration-200">
               {results.length > 0 ? (
                 <ul className="flex flex-col">
                   {results.map((result) => (
@@ -298,8 +299,8 @@ export function CityHero({ cities }: CityHeroProps) {
                         onClick={() => setShowDropdown(false)}
                         className="flex items-center gap-4 px-5 py-3 hover:bg-slate-50 transition-colors w-full group"
                       >
-                        <div className="flex items-center justify-center h-10 w-10 rounded-full bg-primary/5 text-primary shrink-0 group-hover:scale-105 transition-transform">
-                          {result.type === 'city' ? <MapPin className="h-[18px] w-[18px] stroke-[2]" /> : <Building className="h-[18px] w-[18px] stroke-[2]" />}
+                        <div className="flex items-center justify-center size-10 rounded-full bg-primary/5 text-primary shrink-0 group-hover:scale-105 transition-transform">
+                          {result.type === 'city' ? <MapPin className="size-[18px] stroke-[2]" /> : <Building className="size-[18px] stroke-[2]" />}
                         </div>
                         <div className="flex flex-col overflow-hidden">
                           <span className="text-foreground font-semibold text-[15px] tracking-tight truncate group-hover:text-primary transition-colors">{result.title}</span>
@@ -315,8 +316,8 @@ export function CityHero({ cities }: CityHeroProps) {
                 </ul>
               ) : (
                 <div className="p-10 text-center flex flex-col items-center justify-center gap-3">
-                  <div className="h-14 w-14 rounded-full bg-primary/5 flex items-center justify-center mb-2 shadow-inner border border-primary/10">
-                    <Search className="h-6 w-6 text-primary/40" />
+                  <div className="size-14 rounded-full bg-primary/5 flex items-center justify-center mb-2 shadow-inner border border-primary/10">
+                    <Search className="size-6 text-primary/40" />
                   </div>
                   <p className="text-foreground font-display text-lg font-bold tracking-tight">No matches found</p>
                   <p className="text-muted-foreground text-[14.5px]">We couldn&apos;t find any cities or properties matching &quot;{query}&quot;</p>

@@ -59,7 +59,7 @@ const FAKE_REVIEWS: Review[] = [
 ];
 
 function StarRating({ rating, size = "sm" }: { rating: number; size?: "sm" | "lg" }) {
-  const starSize = size === "lg" ? "h-5 w-5" : "h-3.5 w-3.5";
+  const starSize = size === "lg" ? "size-5" : "size-3.5";
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }, (_, i) => (
@@ -132,7 +132,7 @@ export function ReviewsSection() {
             {/* Reviewer Info */}
             <div className="flex items-start gap-4">
               {/* Avatar */}
-              <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary font-bold text-sm shrink-0 select-none">
+              <div className="flex items-center justify-center size-12 rounded-full bg-primary/10 text-primary font-bold text-sm shrink-0 select-none">
                 {review.avatar}
               </div>
 
@@ -158,7 +158,7 @@ export function ReviewsSection() {
 
                 {/* Helpful */}
                 <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors group/helpful">
-                  <ThumbsUp className="h-3.5 w-3.5 group-hover/helpful:scale-110 transition-transform" />
+                  <ThumbsUp className="size-3.5 group-hover/helpful:scale-110 transition-transform" />
                   <span>Helpful ({review.helpful})</span>
                 </button>
               </div>

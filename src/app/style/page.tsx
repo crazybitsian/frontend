@@ -149,7 +149,7 @@ export default function StylePage() {
             onClick={() => toggleTheme("light")}
             className="gap-1.5 h-8 font-medium rounded-md px-3 text-xs"
           >
-            <Sun className="h-3.5 w-3.5" />
+            <Sun className="size-3.5" />
             Light
           </Button>
           <Button
@@ -158,7 +158,7 @@ export default function StylePage() {
             onClick={() => toggleTheme("dark")}
             className="gap-1.5 h-8 font-medium rounded-md px-3 text-xs"
           >
-            <Moon className="h-3.5 w-3.5" />
+            <Moon className="size-3.5" />
             Dark
           </Button>
         </div>
@@ -428,7 +428,7 @@ export default function StylePage() {
                 <div className="space-y-2 pt-2">
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Loading Skeleton</h4>
                   <div className="flex gap-3 items-center">
-                    <Skeleton className="h-10 w-10 rounded-full" />
+                    <Skeleton className="size-10 rounded-full" />
                     <div className="space-y-1.5 flex-1">
                       <Skeleton className="h-3 w-[70%]" />
                       <Skeleton className="h-3 w-[45%]" />
@@ -457,7 +457,7 @@ export default function StylePage() {
             <StayCard
               key={property.id}
               property={property}
-              isSaved={!!savedStays[property.slug]}
+              isSaved={Boolean(savedStays[property.slug])}
               onSaveToggle={toggleSave}
             />
           ))}

@@ -33,7 +33,7 @@ export default function LoginPage() {
         href="/" 
         className="absolute top-8 left-8 flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors z-20"
       >
-        <ArrowLeft className="w-4 h-4 mr-2" />
+        <ArrowLeft className="size-4 mr-2" />
         Back to search
       </Link>
 
@@ -96,13 +96,13 @@ export default function LoginPage() {
               className="mt-8 flex items-center justify-between w-full bg-primary text-primary-foreground px-6 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all hover:pr-4 group shadow-md"
             >
               Continue to Portal
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
 
           {/* Decorative accents */}
-          <div className="absolute top-10 right-10 w-2 h-2 rounded-full bg-primary opacity-50" />
-          <div className="absolute bottom-10 right-20 w-1 h-1 rounded-full bg-muted-foreground opacity-20" />
+          <div className="absolute top-10 right-10 size-2 rounded-full bg-primary opacity-50" />
+          <div className="absolute bottom-10 right-20 size-1 rounded-full bg-muted-foreground opacity-20" />
         </div>
 
         {/* Right: Massive Artistic Image */}

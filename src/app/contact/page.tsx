@@ -25,7 +25,7 @@ export default function ContactPage() {
       (e.target as HTMLFormElement).reset();
     } catch (error) {
       console.error("Failed to submit message", error);
-      alert("Failed to send message. Please try again.");
+      window.alert("Failed to send message. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -49,8 +49,8 @@ export default function ContactPage() {
             <div className="space-y-8">
               {/* Contact Item 1 */}
               <div className="flex items-start gap-4 group">
-                <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center shrink-0">
-                  <Mail className="text-primary w-6 h-6" />
+                <div className="size-12 rounded-xl bg-accent flex items-center justify-center shrink-0">
+                  <Mail className="text-primary size-6" />
                 </div>
                 <div>
                   <p className="text-xs font-sans font-medium uppercase tracking-widest text-muted-foreground mb-1">Email our team</p>
@@ -60,8 +60,8 @@ export default function ContactPage() {
 
               {/* Contact Item 2 */}
               <div className="flex items-start gap-4 group">
-                <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center shrink-0">
-                  <Phone className="text-primary w-6 h-6" />
+                <div className="size-12 rounded-xl bg-accent flex items-center justify-center shrink-0">
+                  <Phone className="text-primary size-6" />
                 </div>
                 <div>
                   <p className="text-xs font-sans font-medium uppercase tracking-widest text-muted-foreground mb-1">Give us a call</p>
@@ -71,8 +71,8 @@ export default function ContactPage() {
 
               {/* Contact Item 3 */}
               <div className="flex items-start gap-4 group">
-                <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center shrink-0">
-                  <MapPin className="text-primary w-6 h-6" />
+                <div className="size-12 rounded-xl bg-accent flex items-center justify-center shrink-0">
+                  <MapPin className="text-primary size-6" />
                 </div>
                 <div>
                   <p className="text-xs font-sans font-medium uppercase tracking-widest text-muted-foreground mb-1">Visit our office</p>
@@ -87,7 +87,7 @@ export default function ContactPage() {
           {/* Right Column: Contact Form */}
           <div className="relative w-full">
             {/* Background decoration for high-end feel */}
-            <div className="absolute -top-12 -right-12 w-48 h-48 bg-accent rounded-full blur-3xl -z-10 opacity-60"></div>
+            <div className="absolute -top-12 -right-12 size-48 bg-accent rounded-full blur-3xl -z-10 opacity-60"></div>
 
             <div className="bg-card border border-border rounded-2xl p-8 md:p-12 shadow-sm relative z-10">
               <form className="space-y-6" onSubmit={handleSubmit}>
@@ -150,13 +150,13 @@ export default function ContactPage() {
                   disabled={isSubmitting || isSuccess}
                 >
                   {isSubmitting ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Loader2 className="size-5 animate-spin" />
                   ) : isSuccess ? (
                     <span>Message Sent</span>
                   ) : (
                     <>
                       <span>Send Message</span>
-                      <Send className="w-4 h-4" />
+                      <Send className="size-4" />
                     </>
                   )}
                 </button>

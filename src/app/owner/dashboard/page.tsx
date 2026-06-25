@@ -74,7 +74,7 @@ export default function OwnerDashboard() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#FAFAF9] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full size-8 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -102,7 +102,7 @@ export default function OwnerDashboard() {
                 : "text-muted-foreground hover:text-foreground hover:bg-muted"
             )}
           >
-            <Building2 className="w-4 h-4" />
+            <Building2 className="size-4" />
             My Properties
           </button>
           <button 
@@ -114,7 +114,7 @@ export default function OwnerDashboard() {
                 : "text-muted-foreground hover:text-foreground hover:bg-muted"
             )}
           >
-            <Users className="w-4 h-4" />
+            <Users className="size-4" />
             Student Leads
           </button>
           <button 
@@ -126,7 +126,7 @@ export default function OwnerDashboard() {
                 : "text-muted-foreground hover:text-foreground hover:bg-muted"
             )}
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="size-4" />
             Settings
           </button>
         </nav>
@@ -136,7 +136,7 @@ export default function OwnerDashboard() {
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="size-4" />
             Sign Out
           </button>
         </div>
@@ -152,10 +152,10 @@ export default function OwnerDashboard() {
                 <p className="text-muted-foreground">Manage your listed hostels and PGs.</p>
               </div>
               <button 
-                onClick={() => alert("Contact support")}
+                onClick={() => window.alert("Contact support")}
                 className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm whitespace-nowrap"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="size-4" />
                 Add New Property
               </button>
             </div>
@@ -167,18 +167,18 @@ export default function OwnerDashboard() {
               </div>
             ) : properties.length === 0 ? (
               <div className="bg-white border border-border rounded-3xl p-12 text-center shadow-sm">
-                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Home className="w-8 h-8 text-muted-foreground/50" />
+                <div className="size-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Home className="size-8 text-muted-foreground/50" />
                 </div>
                 <h3 className="text-xl font-bold font-display text-foreground mb-2">No properties yet</h3>
                 <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
                   You haven&apos;t listed any properties. Add your first property to start receiving leads from students.
                 </p>
                 <button 
-                  onClick={() => alert("Contact support")}
+                  onClick={() => window.alert("Contact support")}
                   className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="size-4" />
                   Add Property
                 </button>
               </div>
@@ -197,12 +197,12 @@ export default function OwnerDashboard() {
                         />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <Home className="w-8 h-8 text-muted-foreground/30" />
+                          <Home className="size-8 text-muted-foreground/30" />
                         </div>
                       )}
                       {property.verified && (
                         <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-md flex items-center gap-1.5 shadow-sm">
-                          <ShieldCheck className="w-3.5 h-3.5 text-primary" />
+                          <ShieldCheck className="size-3.5 text-primary" />
                           <span className="text-[10px] font-bold uppercase tracking-wider text-primary">Verified</span>
                         </div>
                       )}
@@ -212,7 +212,7 @@ export default function OwnerDashboard() {
                         {property.name}
                       </h3>
                       <div className="flex items-center text-muted-foreground text-sm mb-4">
-                        <MapPin className="w-3.5 h-3.5 mr-1 shrink-0" />
+                        <MapPin className="size-3.5 mr-1 shrink-0" />
                         <span className="line-clamp-1">{property.location}</span>
                       </div>
                       
@@ -220,12 +220,12 @@ export default function OwnerDashboard() {
                         <div>
                           <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-0.5">Monthly Rent</p>
                           <p className="font-bold text-foreground flex items-center">
-                            <IndianRupee className="w-4 h-4 mr-0.5" />
+                            <IndianRupee className="size-4 mr-0.5" />
                             {property.price ? property.price.toLocaleString("en-IN") : "0"}
                           </p>
                         </div>
                         <button 
-                          onClick={() => alert("Edit functionality coming soon!")}
+                          onClick={() => window.alert("Edit functionality coming soon!")}
                           className="px-4 py-2 bg-muted text-foreground text-sm font-medium rounded-lg hover:bg-border transition-colors"
                         >
                           Edit Details
@@ -245,7 +245,7 @@ export default function OwnerDashboard() {
             <h1 className="text-3xl font-bold font-display text-foreground mb-2">Student Leads</h1>
             <p className="text-muted-foreground mb-8">Students who have contacted you about your properties.</p>
             <div className="bg-white border border-border rounded-3xl p-12 text-center shadow-sm">
-              <Users className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
+              <Users className="size-12 text-muted-foreground/30 mx-auto mb-4" />
               <h3 className="text-xl font-bold font-display text-foreground mb-2">No leads yet</h3>
               <p className="text-muted-foreground">When students inquire about your properties, they will appear here.</p>
             </div>

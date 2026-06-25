@@ -53,8 +53,8 @@ export function AmenityList({ amenities }: { amenities: string[] }) {
         const Icon = getAmenityIcon(amenity);
         return (
           <div key={i} className="flex items-center gap-4 py-1">
-            <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-accent shrink-0">
-              <Icon className="h-5 w-5 text-primary stroke-[1.5]" />
+            <div className="flex items-center justify-center size-10 rounded-xl bg-accent shrink-0">
+              <Icon className="size-5 text-primary stroke-[1.5]" />
             </div>
             <span className="text-[15px] text-foreground font-medium">{amenity}</span>
           </div>

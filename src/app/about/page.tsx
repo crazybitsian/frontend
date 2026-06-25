@@ -34,7 +34,7 @@ export default function AboutUsPage() {
       <main className="grow">
         {/* Hero Section */}
         <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
-          <div className="absolute inset-0 w-full h-full">
+          <div className="absolute inset-0 size-full">
             <Image 
               src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=3840&auto=format&fit=crop" 
               alt="Premium student living space" 
@@ -92,8 +92,8 @@ export default function AboutUsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Point 1 */}
               <div className="bg-card p-10 border border-border rounded-xl hover:-translate-y-2 hover:shadow-lg transition-all duration-300 group">
-                <div className="w-12 h-12 rounded-lg bg-accent flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
-                  <ShieldCheck className="w-6 h-6" />
+                <div className="size-12 rounded-lg bg-accent flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
+                  <ShieldCheck className="size-6" />
                 </div>
                 <h3 className="font-display text-2xl font-bold mb-4">Safety by Design</h3>
                 <p className="text-muted-foreground leading-relaxed font-sans">
@@ -103,8 +103,8 @@ export default function AboutUsPage() {
               
               {/* Point 2 */}
               <div className="bg-card p-10 border border-border rounded-xl hover:-translate-y-2 hover:shadow-lg transition-all duration-300 group">
-                <div className="w-12 h-12 rounded-lg bg-accent flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
-                  <Sparkles className="w-6 h-6" />
+                <div className="size-12 rounded-lg bg-accent flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
+                  <Sparkles className="size-6" />
                 </div>
                 <h3 className="font-display text-2xl font-bold mb-4">Editorial Standards</h3>
                 <p className="text-muted-foreground leading-relaxed font-sans">
@@ -114,8 +114,8 @@ export default function AboutUsPage() {
               
               {/* Point 3 */}
               <div className="bg-card p-10 border border-border rounded-xl hover:-translate-y-2 hover:shadow-lg transition-all duration-300 group">
-                <div className="w-12 h-12 rounded-lg bg-accent flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
-                  <Building2 className="w-6 h-6" />
+                <div className="size-12 rounded-lg bg-accent flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
+                  <Building2 className="size-6" />
                 </div>
                 <h3 className="font-display text-2xl font-bold mb-4">Empathy in Architecture</h3>
                 <p className="text-muted-foreground leading-relaxed font-sans">

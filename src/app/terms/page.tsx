@@ -2,43 +2,11 @@
 
 import { Footer } from "@/components/Footer";
 import { ShieldCheck, CheckCircle2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useScrollSpy } from "@/hooks/useScrollSpy";
 import Link from "next/link";
 
 export default function TermsOfServicePage() {
-  const [activeSection, setActiveSection] = useState("acceptance");
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = document.querySelectorAll("section[id]");
-      let current = "";
-      
-      sections.forEach((section) => {
-        const sectionTop = (section as HTMLElement).offsetTop;
-        if (window.pageYOffset >= sectionTop - 150) {
-          current = section.getAttribute("id") || "";
-        }
-      });
-
-      if (current) {
-        setActiveSection(current);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    const target = document.getElementById(id);
-    if (target) {
-      window.scrollTo({
-        top: target.offsetTop - 120,
-        behavior: "smooth"
-      });
-    }
-  };
+  const { activeSection, scrollToSection } = useScrollSpy("acceptance");
 
   return (
     <div className="flex flex-col min-h-screen bg-background scroll-smooth">
@@ -94,7 +62,7 @@ export default function TermsOfServicePage() {
               <h1 className="text-5xl md:text-6xl font-display font-bold tracking-tighter text-foreground mb-4">Terms of Service</h1>
               <div className="flex items-center gap-4 text-muted-foreground">
                 <span className="font-sans text-sm uppercase tracking-widest">Legal Editorial</span>
-                <span className="h-1 w-1 bg-border rounded-full"></span>
+                <span className="size-1 bg-border rounded-full"></span>
                 <p className="font-sans text-sm uppercase tracking-widest">Last Updated: October 24, 2024</p>
               </div>
             </header>
@@ -116,7 +84,7 @@ export default function TermsOfServicePage() {
               <section className="scroll-mt-32" id="user-rules">
                 <div className="flex items-center gap-3 mb-6">
                   <span className="p-2 bg-accent text-primary rounded-lg flex items-center justify-center">
-                    <ShieldCheck className="w-6 h-6" />
+                    <ShieldCheck className="size-6" />
                   </span>
                   <h2 className="text-3xl font-display font-semibold tracking-tighter text-foreground">2. User Rules &amp; Conduct</h2>
                 </div>
@@ -143,21 +111,21 @@ export default function TermsOfServicePage() {
                 <div className="bg-muted p-10 rounded-2xl border border-border">
                   <ul className="space-y-6">
                     <li className="flex gap-4">
-                      <CheckCircle2 className="text-primary w-6 h-6 shrink-0" />
+                      <CheckCircle2 className="text-primary size-6 shrink-0" />
                       <div>
                         <h4 className="font-semibold font-display text-lg">Zero Brokerage Guarantee</h4>
                         <p className="text-muted-foreground">ApnaKamra does not charge students any brokerage fees for finding rooms through our platform.</p>
                       </div>
                     </li>
                     <li className="flex gap-4">
-                      <CheckCircle2 className="text-primary w-6 h-6 shrink-0" />
+                      <CheckCircle2 className="text-primary size-6 shrink-0" />
                       <div>
                         <h4 className="font-semibold font-display text-lg">Rent Processing</h4>
                         <p className="text-muted-foreground">Payments made via our secure portal are held in escrow until the check-in is verified, ensuring student protection.</p>
                       </div>
                     </li>
                     <li className="flex gap-4">
-                      <CheckCircle2 className="text-primary w-6 h-6 shrink-0" />
+                      <CheckCircle2 className="text-primary size-6 shrink-0" />
                       <div>
                         <h4 className="font-semibold font-display text-lg">Refund Policy</h4>
                         <p className="text-muted-foreground">Cancellations made 7 days prior to check-in are eligible for a full refund of the security deposit.</p>

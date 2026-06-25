@@ -19,7 +19,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
     ? images
     : ["https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1200&auto=format&fit=crop"];
 
-  const mainImage = displayImages[0];
+  const [mainImage] = displayImages;
   const sideImages = displayImages.slice(1, 5); // Show up to 4 more images for closed state
 
   const handlePrevious = useCallback((e?: React.MouseEvent) => {
@@ -60,6 +60,24 @@ export function StayGallery({ images, title }: StayGalleryProps) {
     };
   }, [isLightboxOpen]);
 
+  const renderImageCard = (item: { src: string; originalIndex: number }, key: number, sizes: string) => (
+    <div
+      key={key}
+      className="rounded-xl overflow-hidden relative group border border-border shadow-sm bg-muted cursor-pointer"
+      onClick={() => setSelectedImageIndex(item.originalIndex)}
+    >
+      <Image
+        src={item.src}
+        alt={`${title} photo`}
+        width={800}
+        height={600}
+        sizes={sizes}
+        className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500 ease-out" />
+    </div>
+  );
+
   return (
     <div className="flex flex-col">
       {/* 
@@ -97,7 +115,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                 onClick={handleClose}
                 className="p-2 rounded-full bg-black/5 hover:bg-black/10 text-foreground transition-colors backdrop-blur-md"
               >
-                <X className="w-6 h-6" />
+                <X className="size-6" />
               </button>
             </div>
 
@@ -108,7 +126,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                 onClick={handlePrevious}
                 className="absolute left-2 sm:left-6 p-3 rounded-full bg-background/80 hover:bg-background border border-border/50 text-foreground transition-colors shadow-sm z-50 group backdrop-blur-md"
               >
-                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-x-0.5 transition-transform" />
+                <ChevronLeft className="size-5 sm:size-6 group-hover:-translate-x-0.5 transition-transform" />
               </button>
 
               {/* Sharp Foreground Image */}
@@ -131,7 +149,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                 onClick={handleNext}
                 className="absolute right-2 sm:right-6 p-3 rounded-full bg-background/80 hover:bg-background border border-border/50 text-foreground transition-colors shadow-sm z-50 group backdrop-blur-md"
               >
-                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight className="size-5 sm:size-6 group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
 
@@ -145,7 +163,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                   <button
                     key={idx}
                     onClick={() => setSelectedImageIndex(idx)}
-                    className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0 transition-all duration-300 ${idx === selectedImageIndex
+                    className={`relative size-16 sm:size-20 rounded-xl overflow-hidden shrink-0 transition-all duration-300 ${idx === selectedImageIndex
                       ? "ring-2 ring-primary ring-offset-2 ring-offset-transparent opacity-100 scale-105 shadow-lg"
                       : "opacity-50 hover:opacity-100 grayscale hover:grayscale-0"
                       }`}
@@ -179,23 +197,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                 {displayImages
                   .map((src, originalIndex) => ({ src, originalIndex }))
                   .filter((_, i) => i % 2 === colIndex)
-                  .map((item, i) => (
-                    <div
-                      key={i}
-                      className="rounded-xl overflow-hidden relative group border border-border shadow-sm bg-muted cursor-pointer"
-                      onClick={() => setSelectedImageIndex(item.originalIndex)}
-                    >
-                      <Image
-                        src={item.src}
-                        alt={`${title} photo`}
-                        width={800}
-                        height={600}
-                        sizes="50vw"
-                        className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500 ease-out" />
-                    </div>
-                  ))}
+                  .map((item, i) => renderImageCard(item, i, "50vw"))}
               </div>
             ))}
           </div>
@@ -207,23 +209,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                 {displayImages
                   .map((src, originalIndex) => ({ src, originalIndex }))
                   .filter((_, i) => i % 3 === colIndex)
-                  .map((item, i) => (
-                    <div
-                      key={i}
-                      className="rounded-xl overflow-hidden relative group border border-border shadow-sm bg-muted cursor-pointer"
-                      onClick={() => setSelectedImageIndex(item.originalIndex)}
-                    >
-                      <Image
-                        src={item.src}
-                        alt={`${title} photo`}
-                        width={800}
-                        height={600}
-                        sizes="33vw"
-                        className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500 ease-out" />
-                    </div>
-                  ))}
+                  .map((item, i) => renderImageCard(item, i, "33vw"))}
               </div>
             ))}
           </div>
@@ -238,7 +224,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
               }}
               className="bg-white/90 backdrop-blur-md text-primary px-6 py-2.5 rounded-full font-[family-name:var(--font-dm-sans)] font-semibold text-sm shadow-lg flex items-center gap-2 hover:scale-95 hover:bg-white transition-all border border-border"
             >
-              <ChevronUp className="w-5 h-5" />
+              <ChevronUp className="size-5" />
               Show less
             </button>
           </div>
@@ -255,7 +241,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
           >
             {/* Mobile/Tablet View - Single Image */}
             <div
-              className="md:hidden relative h-full w-full cursor-pointer group"
+              className="md:hidden relative size-full cursor-pointer group"
               onClick={() => setSelectedImageIndex(0)}
             >
               <Image
@@ -274,7 +260,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
             </div>
 
             {/* Desktop View - Adaptive Gallery Grid */}
-            <div className={`hidden md:grid gap-2 h-full w-full absolute inset-0 ${
+            <div className={`hidden md:grid gap-2 size-full absolute inset-0 ${
               displayImages.length === 1 ? 'grid-cols-1' :
               displayImages.length === 2 ? 'grid-cols-2' :
               displayImages.length === 3 ? 'grid-cols-3' :
@@ -326,7 +312,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                 onClick={() => setIsExpanded(true)}
                 className="absolute bottom-4 right-4 z-30 bg-white/95 backdrop-blur-sm text-foreground px-5 py-2.5 rounded-xl font-semibold text-sm shadow-lg hover:bg-white hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2 border border-black/5 cursor-pointer"
               >
-                <LayoutGrid className="w-4 h-4" />
+                <LayoutGrid className="size-4" />
                 Show all photos
               </button>
             )}

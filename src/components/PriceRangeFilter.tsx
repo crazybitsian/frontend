@@ -110,13 +110,13 @@ export function PriceRangeFilter({
         <div className="relative h-1 w-full bg-muted rounded-full">
           {/* Active Track Fill */}
           <div 
-            className="absolute top-0 bottom-0 bg-primary rounded-full transition-all duration-75"
+            className="absolute inset-y-0 bg-primary rounded-full transition-all duration-75"
             style={{ left: `${minPercent}%`, width: `${maxPercent - minPercent}%` }}
           />
         </div>
 
         {/* Native Input Overlays */}
-        <div className="absolute left-2 right-2 bottom-2 h-1">
+        <div className="absolute inset-x-2 bottom-2 h-1">
           <input 
             type="range"
             min={absoluteMin}

@@ -69,7 +69,7 @@ export default async function Home() {
         <div className="w-full max-w-5xl px-4 flex flex-col h-full justify-center">
           {/* Single Horizontal Line Heading */}
           <div className="w-full text-center mb-6 md:mb-10">
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/50 leading-none whitespace-nowrap overflow-hidden text-ellipsis drop-shadow-sm pb-2">
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/50 leading-none truncate drop-shadow-sm pb-2">
               Where will you move next?
             </h2>
           </div>
@@ -113,7 +113,7 @@ export default async function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             <div className="group flex flex-col p-7 sm:p-8 rounded-2xl bg-card border border-border/40 hover:border-primary/20 shadow-[0_2px_12px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-500">
               <div className="mb-6 p-3.5 bg-accent w-fit rounded-xl group-hover:scale-110 transition-transform duration-500">
-                <BadgeCheck className="h-7 w-7 text-primary stroke-[1.5]" />
+                <BadgeCheck className="size-7 text-primary stroke-[1.5]" />
               </div>
               <h3 className="text-xl font-bold mb-3 font-display tracking-tight">100% Verified</h3>
               <p className="text-muted-foreground leading-relaxed text-[15px]">
@@ -123,7 +123,7 @@ export default async function Home() {
 
             <div className="group flex flex-col p-7 sm:p-8 rounded-2xl bg-card border border-border/40 hover:border-primary/20 shadow-[0_2px_12px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-500">
               <div className="mb-6 p-3.5 bg-accent w-fit rounded-xl group-hover:scale-110 transition-transform duration-500">
-                <Banknote className="h-7 w-7 text-primary stroke-[1.5]" />
+                <Banknote className="size-7 text-primary stroke-[1.5]" />
               </div>
               <h3 className="text-xl font-bold mb-3 font-display tracking-tight">Zero Brokerage</h3>
               <p className="text-muted-foreground leading-relaxed text-[15px]">
@@ -133,7 +133,7 @@ export default async function Home() {
 
             <div className="group flex flex-col p-7 sm:p-8 rounded-2xl bg-card border border-border/40 hover:border-primary/20 shadow-[0_2px_12px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-500">
               <div className="mb-6 p-3.5 bg-accent w-fit rounded-xl group-hover:scale-110 transition-transform duration-500">
-                <Users className="h-7 w-7 text-primary stroke-[1.5]" />
+                <Users className="size-7 text-primary stroke-[1.5]" />
               </div>
               <h3 className="text-xl font-bold mb-3 font-display tracking-tight">Student Community</h3>
               <p className="text-muted-foreground leading-relaxed text-[15px]">

@@ -37,7 +37,11 @@ export function StayCard({ property, isSaved = false, onSaveToggle, priorityImag
 
   const formatPrice = (price?: number) => {
     if (!price) return "Price on request";
-    return "₹" + Number(price).toLocaleString("en-IN");
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(price);
   };
 
   const getSharingText = () => {
@@ -87,15 +91,15 @@ export function StayCard({ property, isSaved = false, onSaveToggle, priorityImag
           <>
             <button
               onClick={handlePrevImage}
-              className="absolute left-2 top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-black opacity-0 transition-opacity group-hover/carousel:opacity-100 hover:scale-110 shadow-sm z-20"
+              className="absolute left-2 top-1/2 -translate-y-1/2 flex size-7 items-center justify-center rounded-full bg-white/90 text-black opacity-0 transition-opacity group-hover/carousel:opacity-100 hover:scale-110 shadow-sm z-20"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="size-4" />
             </button>
             <button
               onClick={handleNextImage}
-              className="absolute right-2 top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-black opacity-0 transition-opacity group-hover/carousel:opacity-100 hover:scale-110 shadow-sm z-20"
+              className="absolute right-2 top-1/2 -translate-y-1/2 flex size-7 items-center justify-center rounded-full bg-white/90 text-black opacity-0 transition-opacity group-hover/carousel:opacity-100 hover:scale-110 shadow-sm z-20"
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="size-4" />
             </button>
 
             {/* Gradient for Carousel Dots */}
@@ -145,7 +149,7 @@ export function StayCard({ property, isSaved = false, onSaveToggle, priorityImag
               e.stopPropagation();
               onSaveToggle(slug);
             }}
-            className="absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 backdrop-blur-xl shadow-lg border border-black/5 transition-all duration-300 hover:scale-110 active:scale-90 z-20 group"
+            className="absolute top-3 right-3 flex size-9 items-center justify-center rounded-full bg-white/95 backdrop-blur-xl shadow-lg border border-black/5 transition-all duration-300 hover:scale-110 active:scale-90 z-20 group"
             aria-label={isSaved ? "Remove from saved" : "Save stay"}
           >
             <Heart

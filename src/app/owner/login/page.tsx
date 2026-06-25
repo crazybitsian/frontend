@@ -66,7 +66,7 @@ export default function OwnerLoginPage() {
         href="/" 
         className="absolute top-8 left-8 lg:top-12 lg:left-12 flex items-center text-sm font-medium text-white hover:text-white/80 transition-colors z-20 drop-shadow-md"
       >
-        <ArrowLeft className="w-4 h-4 mr-2" />
+        <ArrowLeft className="size-4 mr-2" />
         Back to home
       </Link>
 
@@ -132,7 +132,7 @@ export default function OwnerLoginPage() {
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2 className="size-5 animate-spin" />
                   Authenticating...
                 </>
               ) : (

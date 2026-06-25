@@ -12,7 +12,7 @@ async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 
   } catch (e) {
     clearTimeout(timeout);
     if (attempt >= retries) throw e;
-    await new Promise((r) => setTimeout(r, delay * attempt));
+    await new Promise((resolve) => setTimeout(resolve, delay * attempt));
     return fetchWithRetry(url, options, retries, delay, attempt + 1);
   }
 }
@@ -59,7 +59,8 @@ export const api = {
     if (params.amenities) qs.set("amenities", params.amenities);
     if (params.flag) qs.set("flag", params.flag);
     const queryString = qs.toString();
-    return apiGet<Property[]>(`/properties${queryString ? `?${queryString}` : ""}`);
+    const path = queryString ? `/properties?${queryString}` : "/properties";
+    return apiGet<Property[]>(path);
   },
 
   getProperty: (slug: string) => apiGet<Property>(`/properties/${slug}`),

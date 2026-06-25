@@ -56,7 +56,11 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
 
   const formatPrice = (price?: number) => {
     if (!price) return "Price on request";
-    return "\u20B9" + Number(price).toLocaleString("en-IN");
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(price);
   };
 
   const getSharingOptions = () => {
@@ -81,10 +85,10 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
           <header className="mb-4 flex items-center justify-between">
             <Link
               href={`/${resolvedParams.city}`}
-              className="flex items-center justify-center h-10 w-10 rounded-full bg-card border border-border text-foreground hover:bg-muted transition-colors shadow-sm"
+              className="flex items-center justify-center size-10 rounded-full bg-card border border-border text-foreground hover:bg-muted transition-colors shadow-sm"
               aria-label="Back"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="size-5" />
             </Link>
             <div className="flex gap-2">
               <StayControls propertySlug={property.slug} propertyName={property.name} />
@@ -108,15 +112,15 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
               <div className="pb-8 border-b border-border">
                 {/* Badges */}
                 <div className="flex flex-wrap items-center gap-2 mb-3">
-                  {!!property.is_trusted && (
+                  {Boolean(property.is_trusted) && (
                     <span className="inline-flex items-center gap-1.5 bg-accent text-accent-foreground px-3 py-1.5 rounded-lg text-xs font-semibold">
-                      <ShieldCheck className="h-3.5 w-3.5" />
+                      <ShieldCheck className="size-3.5" />
                       Verified Stay
                     </span>
                   )}
-                  {!!property.is_featured && (
+                  {Boolean(property.is_featured) && (
                     <span className="inline-flex items-center gap-1.5 bg-amber-500/10 text-amber-600 px-3 py-1.5 rounded-lg text-xs font-semibold">
-                      <Star className="h-3.5 w-3.5 fill-current" />
+                      <Star className="size-3.5 fill-current" />
                       Featured
                     </span>
                   )}
@@ -129,7 +133,7 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
 
                 {/* Location */}
                 <div className="flex items-center gap-2 text-muted-foreground text-[15px]">
-                  <MapPin className="h-4 w-4 shrink-0" />
+                  <MapPin className="size-4 shrink-0" />
                   <span>{displayLocality}</span>
                 </div>
               </div>
@@ -161,7 +165,7 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
                                 : "border-border bg-muted/30 text-foreground font-medium"
                             }`}
                           >
-                            <BedDouble className="h-4 w-4" />
+                            <BedDouble className="size-4" />
                             <span>{opt.label}: {formatPrice(opt.price)}</span>
                           </div>
                         );
@@ -210,8 +214,8 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
                     { icon: IdCard, text: "ID proof required at check-in" },
                   ].map((rule, i) => (
                     <div key={i} className="flex items-center gap-4 py-1">
-                      <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-muted shrink-0">
-                        <rule.icon className="h-5 w-5 text-muted-foreground stroke-[1.5]" />
+                      <div className="flex items-center justify-center size-10 rounded-xl bg-muted shrink-0">
+                        <rule.icon className="size-5 text-muted-foreground stroke-[1.5]" />
                       </div>
                       <span className="text-[15px] text-foreground/80 font-medium">{rule.text}</span>
                     </div>
@@ -227,11 +231,11 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
                     href={property.map_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full aspect-[16/9] rounded-2xl border border-border bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors overflow-hidden group"
+                    className="w-full aspect-[16/9] rounded-2xl border border-border bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors overflow-hidden group"
                   >
                     <div className="flex flex-col items-center gap-3 text-muted-foreground group-hover:text-primary transition-colors">
-                      <div className="flex items-center justify-center h-14 w-14 rounded-2xl bg-accent">
-                        <MapPin className="h-7 w-7 text-primary" />
+                      <div className="flex items-center justify-center size-14 rounded-2xl bg-accent">
+                        <MapPin className="size-7 text-primary" />
                       </div>
                       <span className="text-sm font-semibold">View on Google Maps</span>
                     </div>
@@ -239,8 +243,8 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
                 ) : (
                   <div className="w-full aspect-[16/9] rounded-2xl border border-border bg-muted flex items-center justify-center">
                     <div className="flex flex-col items-center gap-3 text-muted-foreground">
-                      <div className="flex items-center justify-center h-14 w-14 rounded-2xl bg-muted">
-                        <MapPin className="h-7 w-7" />
+                      <div className="flex items-center justify-center size-14 rounded-2xl bg-muted">
+                        <MapPin className="size-7" />
                       </div>
                       <span className="text-sm font-medium">Map not available</span>
                     </div>
@@ -286,7 +290,7 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
                               }`}
                             >
                               <div className="flex items-center gap-3">
-                                <BedDouble className={`h-5 w-5 ${isCheapest ? 'text-primary' : 'text-muted-foreground'}`} />
+                                <BedDouble className={`size-5 ${isCheapest ? 'text-primary' : 'text-muted-foreground'}`} />
                                 <span className="text-sm font-semibold">{opt.label} sharing</span>
                               </div>
                               <span className={`text-sm font-bold tabular-nums ${isCheapest ? 'text-primary' : 'text-foreground'}`}>
@@ -301,10 +305,10 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
                   })()}
 
                   {/* Trust Signals */}
-                  {!!property.is_trusted && (
+                  {Boolean(property.is_trusted) && (
                     <div className="flex items-center gap-3 mb-6 pb-6 border-b border-border">
-                      <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-accent shrink-0">
-                        <ShieldCheck className="h-5 w-5 text-primary" />
+                      <div className="flex items-center justify-center size-10 rounded-xl bg-accent shrink-0">
+                        <ShieldCheck className="size-5 text-primary" />
                       </div>
                       <div>
                         <span className="text-sm font-bold text-foreground block">Verified Property</span>
@@ -323,7 +327,7 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
       </main>
 
       {/* Sticky Bottom Bar (Mobile/Tablet only) */}
-      <div className="sticky bottom-0 z-40 bg-background/95 backdrop-blur-lg border-t border-border py-4 px-4 lg:hidden">
+      <div className="sticky bottom-0 z-40 bg-background/95 backdrop-blur-lg border-t border-border p-4 lg:hidden">
         <div className="container mx-auto max-w-6xl flex items-center justify-between gap-4">
           <div className="min-w-0">
             <span className="text-xl font-bold text-foreground tabular-nums">

@@ -33,9 +33,9 @@ const SORT_OPTIONS = [
 
 const formatCityName = (name: string) => {
   if (!name) return "";
-  return name.toLowerCase().split(" ").map(word => 
-    word === "ncr" ? "NCR" : word.charAt(0).toUpperCase() + word.slice(1)
-  ).join(" ");
+  return name.toLowerCase().split(" ").map((word) => {
+    return word === "ncr" ? "NCR" : word.charAt(0).toUpperCase() + word.slice(1);
+  }).join(" ");
 };
 
 export function CityListingClient({ citySlug, cityName, cities = [], initialProperties }: CityListingClientProps) {
@@ -74,11 +74,11 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
       setActiveFilters([]);
       return;
     }
-    setActiveFilters((prev) => 
-      prev.includes(filterId) 
+    setActiveFilters((prev) => {
+      return prev.includes(filterId) 
         ? prev.filter((id) => id !== filterId) 
-        : [...prev, filterId]
-    );
+        : [...prev, filterId];
+    });
   };
 
   const getFilterParams = useCallback(() => {
@@ -130,8 +130,8 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
           
           {/* Left: Brand / Mobile Back Button */}
           <div className="shrink-0 flex items-center">
-            <Link href="/" className="md:hidden flex items-center justify-center h-10 w-10 rounded-full hover:bg-black/5 transition-colors mr-2">
-              <ArrowLeft className="h-5 w-5 text-foreground" />
+            <Link href="/" className="md:hidden flex items-center justify-center size-10 rounded-full hover:bg-black/5 transition-colors mr-2">
+              <ArrowLeft className="size-5 text-foreground" />
             </Link>
             <Link href="/" className="hidden md:block font-display font-bold text-primary tracking-tighter text-2xl">
               ApnaKamra
@@ -145,7 +145,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
               <Select value={citySlug} onValueChange={(val) => router.push(`/${val}`)}>
                 <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-muted focus:ring-0 rounded-full h-auto py-1 px-4 text-sm font-medium transition-colors cursor-pointer w-auto shrink-0">
                   <div className="flex items-center gap-2">
-                    <MapPin className="h-[20px] w-[20px] text-primary" />
+                    <MapPin className="size-[20px] text-primary" />
                     <span className="font-medium text-sm">{formatCityName(cityName)}</span>
                   </div>
                 </SelectTrigger>
@@ -173,9 +173,9 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
                           className="p-2 cursor-pointer rounded-2xl hover:bg-black/5 focus:bg-black/5 transition-colors duration-200"
                         >
                           <div className="flex items-center gap-3.5 pr-2 w-full">
-                            <div className={`h-11 w-11 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center shadow-sm border border-black/5 shrink-0 overflow-hidden relative isolate`}>
+                            <div className={`size-11 rounded-full bg-gradient-to-br ${gradient} flex items-center justify-center shadow-sm border border-black/5 shrink-0 overflow-hidden relative isolate`}>
                               {city.image ? (
-                                <img src={city.image} alt={city.name} className="h-full w-full object-cover" />
+                                <img src={city.image} alt={city.name} className="size-full object-cover" />
                               ) : (
                                 <span className="font-bold text-foreground/50 text-lg uppercase">{city.name.charAt(0)}</span>
                               )}
@@ -205,8 +205,8 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
               </div>
 
               {/* Search Button */}
-              <div className="bg-primary hover:bg-[#125633] text-white w-10 h-10 rounded-full flex items-center justify-center transition-all active:scale-95 shrink-0 shadow-sm cursor-pointer">
-                <Search className="h-[20px] w-[20px]" />
+              <div className="bg-primary hover:bg-[#125633] text-white size-10 rounded-full flex items-center justify-center transition-all active:scale-95 shrink-0 shadow-sm cursor-pointer">
+                <Search className="size-[20px]" />
               </div>
             </div>
           </div>
@@ -218,10 +218,10 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
               onClick={() => setIsFilterModalOpen(true)}
               className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 border border-border/80 rounded-full text-sm font-medium hover:bg-muted transition-colors bg-white cursor-pointer"
             >
-              <SlidersHorizontal className="h-[18px] w-[18px]" />
+              <SlidersHorizontal className="size-[18px]" />
               <span className="hidden sm:inline">Filters</span>
               {(activeFilters.length > 0 || minBudget > 0 || maxBudget < 30000) && (
-                <span className="bg-primary w-2 h-2 rounded-full hidden sm:inline" />
+                <span className="bg-primary size-2 rounded-full hidden sm:inline" />
               )}
             </button>
             
@@ -248,7 +248,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
           <div className="w-full flex items-center bg-white border border-border/80 rounded-full px-2 py-1.5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_4px_6px_-2px_rgba(0,0,0,0.05)] transition-shadow hover:shadow-md">
             <Select value={citySlug} onValueChange={(val) => router.push(`/${val}`)}>
               <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-muted focus:ring-0 rounded-full h-auto py-1 px-3 text-sm font-medium transition-colors cursor-pointer w-auto shrink-0">
-                <MapPin className="h-4 w-4 text-primary" />
+                <MapPin className="size-4 text-primary" />
               </SelectTrigger>
               <SelectContent className="rounded-2xl shadow-xl border-border p-2 min-w-[200px]">
                 <SelectGroup className="flex flex-col gap-1 p-1">
@@ -269,8 +269,8 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
                 className="w-full h-auto p-0 bg-transparent border-none focus-visible:ring-0 text-sm placeholder:text-muted-foreground shadow-none"
               />
             </div>
-            <div className="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm cursor-pointer">
-              <Search className="h-4 w-4" />
+            <div className="bg-primary text-white size-8 rounded-full flex items-center justify-center shrink-0 shadow-sm cursor-pointer">
+              <Search className="size-4" />
             </div>
           </div>
         </div>
@@ -322,7 +322,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
               {filteredProperties.map((property, index) => (
                 <Link
                   href={`/${citySlug}/${property.slug}`}
-                  key={property._id || property.slug}
+                  key={property.slug}
                   className="block outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-[16px]"
                 >
                   <StayCard 
@@ -344,8 +344,8 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
         {/* Empty State */}
         {!isLoading && !isError && filteredProperties && filteredProperties.length === 0 && (
           <div className="py-24 text-center">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
-              <Search className="h-6 w-6 text-muted-foreground" />
+            <div className="size-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
+              <Search className="size-6 text-muted-foreground" />
             </div>
             <h3 className="text-xl font-bold font-display mb-2">No rooms match these filters</h3>
             <p className="text-muted-foreground max-w-sm mx-auto mb-8">
@@ -385,15 +385,15 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-              className="fixed bottom-0 left-0 right-0 z-[101] bg-background rounded-t-[32px] shadow-2xl flex flex-col md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-xl md:rounded-[32px] md:h-auto max-h-[90vh] overflow-hidden border border-border/50"
+              className="fixed bottom-0 inset-x-0 z-[101] bg-background rounded-t-[32px] shadow-2xl flex flex-col md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-xl md:rounded-[32px] md:h-auto max-h-[90vh] overflow-hidden border border-border/50"
             >
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-border/50 bg-background/80 backdrop-blur-md sticky top-0 z-10">
                 <button 
                   onClick={() => setIsFilterModalOpen(false)}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-muted hover:bg-muted/80 transition-colors"
+                  className="size-10 flex items-center justify-center rounded-full bg-muted hover:bg-muted/80 transition-colors"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="size-5" />
                 </button>
                 <h2 className="font-display font-bold text-xl">Advanced Filters</h2>
                 <div className="w-10" /> {/* Spacer for centering */}
@@ -463,7 +463,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
                               : "border-border/60 hover:border-primary/30 text-foreground"
                           }`}
                         >
-                          <Icon className="h-5 w-5" />
+                          <Icon className="size-5" />
                           <span className="font-semibold">{amenity.label}</span>
                         </button>
                       );
@@ -474,7 +474,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
               </div>
 
               {/* Sticky Footer */}
-              <div className="p-6 border-t border-border/50 bg-background/80 backdrop-blur-md absolute md:relative bottom-0 left-0 right-0 flex items-center justify-between">
+              <div className="p-6 border-t border-border/50 bg-background/80 backdrop-blur-md absolute md:relative bottom-0 inset-x-0 flex items-center justify-between">
                 <button 
                   onClick={() => {
                     setActiveFilters([]);

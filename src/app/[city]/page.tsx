@@ -60,7 +60,6 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           citySlug={resolvedParams.city}
           cityName={cityName}
           cities={allCities}
-          initialCount={initialProperties.length}
           initialProperties={initialProperties}
         />
       </main>

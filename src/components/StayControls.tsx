@@ -32,7 +32,7 @@ export function StayControls({ propertySlug, propertyName }: StayControlsProps) 
       }
     } else {
       navigator.clipboard.writeText(url);
-      alert("Link copied to clipboard!");
+      window.alert("Link copied to clipboard!");
     }
   };
 
@@ -54,11 +54,11 @@ export function StayControls({ propertySlug, propertyName }: StayControlsProps) 
 
   if (!isMounted) return (
     <div className="flex gap-2">
-      <button className="flex items-center justify-center h-10 w-10 rounded-full bg-card border border-border text-foreground shadow-sm" aria-label="Share">
-        <Share2 className="h-4.5 w-4.5" />
+      <button className="flex items-center justify-center size-10 rounded-full bg-card border border-border text-foreground shadow-sm" aria-label="Share">
+        <Share2 className="size-4.5" />
       </button>
-      <button className="flex items-center justify-center h-10 w-10 rounded-full bg-card border border-border text-foreground shadow-sm" aria-label="Save">
-        <Heart className="h-4.5 w-4.5" />
+      <button className="flex items-center justify-center size-10 rounded-full bg-card border border-border text-foreground shadow-sm" aria-label="Save">
+        <Heart className="size-4.5" />
       </button>
     </div>
   );
@@ -67,17 +67,17 @@ export function StayControls({ propertySlug, propertyName }: StayControlsProps) 
     <div className="flex gap-2">
       <button 
         onClick={handleShare}
-        className="flex items-center justify-center h-10 w-10 rounded-full bg-card border border-border text-foreground hover:bg-muted transition-colors shadow-sm" 
+        className="flex items-center justify-center size-10 rounded-full bg-card border border-border text-foreground hover:bg-muted transition-colors shadow-sm" 
         aria-label="Share"
       >
-        <Share2 className="h-4.5 w-4.5" />
+        <Share2 className="size-4.5" />
       </button>
       <button 
         onClick={handleLike}
-        className={`flex items-center justify-center h-10 w-10 rounded-full border transition-colors shadow-sm ${isLiked ? 'bg-primary/10 border-primary/20 text-primary hover:bg-primary/20' : 'bg-card border-border text-foreground hover:bg-muted'}`} 
+        className={`flex items-center justify-center size-10 rounded-full border transition-colors shadow-sm ${isLiked ? 'bg-primary/10 border-primary/20 text-primary hover:bg-primary/20' : 'bg-card border-border text-foreground hover:bg-muted'}`} 
         aria-label="Save"
       >
-        <Heart className={`h-4.5 w-4.5 transition-all duration-300 ${isLiked ? 'fill-current scale-110' : 'scale-100'}`} />
+        <Heart className={`size-4.5 transition-all duration-300 ${isLiked ? 'fill-current scale-110' : 'scale-100'}`} />
       </button>
     </div>
   );
