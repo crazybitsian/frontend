@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -29,7 +29,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BadgeCheck, Moon, Sun, Laptop } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 
 // Mock stays matching Indian student context
 const MOCK_PROPERTIES: Property[] = [
@@ -149,7 +149,7 @@ export default function StylePage() {
             onClick={() => toggleTheme("light")}
             className="gap-1.5 h-8 font-medium rounded-md px-3 text-xs"
           >
-            <Sun className="h-3.5 w-3.5" />
+            <Sun className="size-3.5" />
             Light
           </Button>
           <Button
@@ -158,7 +158,7 @@ export default function StylePage() {
             onClick={() => toggleTheme("dark")}
             className="gap-1.5 h-8 font-medium rounded-md px-3 text-xs"
           >
-            <Moon className="h-3.5 w-3.5" />
+            <Moon className="size-3.5" />
             Dark
           </Button>
         </div>
@@ -244,7 +244,7 @@ export default function StylePage() {
             <div className="border-t border-border/60 pt-3">
               <p className="text-xs text-muted-foreground mb-1">Body Text (Inter)</p>
               <p className="text-sm text-foreground leading-relaxed">
-                Experience premium, verified student and professional accommodations across India's top cities. Zero brokerage.
+                Experience premium, verified student and professional accommodations across India&apos;s top cities. Zero brokerage.
               </p>
             </div>
             <div className="border-t border-border/60 pt-3">
@@ -428,7 +428,7 @@ export default function StylePage() {
                 <div className="space-y-2 pt-2">
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Loading Skeleton</h4>
                   <div className="flex gap-3 items-center">
-                    <Skeleton className="h-10 w-10 rounded-full" />
+                    <Skeleton className="size-10 rounded-full" />
                     <div className="space-y-1.5 flex-1">
                       <Skeleton className="h-3 w-[70%]" />
                       <Skeleton className="h-3 w-[45%]" />
@@ -457,7 +457,7 @@ export default function StylePage() {
             <StayCard
               key={property.id}
               property={property}
-              isSaved={!!savedStays[property.slug]}
+              isSaved={Boolean(savedStays[property.slug])}
               onSaveToggle={toggleSave}
             />
           ))}

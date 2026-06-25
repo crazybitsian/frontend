@@ -2,7 +2,6 @@ import { api } from "@/lib/api/client";
 import { CityHero } from "@/components/CityHero";
 import { CityGrid } from "@/components/CityGrid";
 import { FeaturedStays } from "@/components/FeaturedStays";
-import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BadgeCheck, Banknote, Users } from "lucide-react";
 import { City, Property } from "@/lib/api/types";
@@ -15,7 +14,35 @@ export default async function Home() {
   let featuredProperties: Property[] = [];
 
   try {
-    cities = await api.getCities();
+    let fetchedCities = await api.getCities();
+    
+    // Fix capitalizations and override specific images for maximum aesthetic quality
+    fetchedCities = fetchedCities.map(city => {
+      if (city.slug === "delhi-ncr") return { 
+        ...city, 
+        name: "Delhi NCR", 
+        image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=1200&auto=format&fit=crop" // Premium Skyline
+      };
+      if (city.slug === "hyderabad") return { 
+        ...city, 
+        name: "Hyderabad", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/c/ca/Durgam_Cheruvu_Panorama_V2.jpg" // Authentic premium Hyderabad image
+      };
+      if (city.slug === "kota") return { ...city, name: "Kota" };
+      return city;
+    });
+
+    // Swap Bangalore and Kota
+    const bIndex = fetchedCities.findIndex(c => c.slug === "bangalore");
+    const kIndex = fetchedCities.findIndex(c => c.slug === "kota");
+    
+    if (bIndex !== -1 && kIndex !== -1) {
+      const temp = fetchedCities[bIndex];
+      fetchedCities[bIndex] = fetchedCities[kIndex];
+      fetchedCities[kIndex] = temp;
+    }
+    
+    cities = fetchedCities;
   } catch (error) {
     console.error("Failed to fetch cities:", error);
   }
@@ -42,7 +69,7 @@ export default async function Home() {
         <div className="w-full max-w-5xl px-4 flex flex-col h-full justify-center">
           {/* Single Horizontal Line Heading */}
           <div className="w-full text-center mb-6 md:mb-10">
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/50 leading-none whitespace-nowrap overflow-hidden text-ellipsis drop-shadow-sm pb-2">
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/50 leading-none truncate drop-shadow-sm pb-2">
               Where will you move next?
             </h2>
           </div>
@@ -86,7 +113,7 @@ export default async function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             <div className="group flex flex-col p-7 sm:p-8 rounded-2xl bg-card border border-border/40 hover:border-primary/20 shadow-[0_2px_12px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-500">
               <div className="mb-6 p-3.5 bg-accent w-fit rounded-xl group-hover:scale-110 transition-transform duration-500">
-                <BadgeCheck className="h-7 w-7 text-primary stroke-[1.5]" />
+                <BadgeCheck className="size-7 text-primary stroke-[1.5]" />
               </div>
               <h3 className="text-xl font-bold mb-3 font-display tracking-tight">100% Verified</h3>
               <p className="text-muted-foreground leading-relaxed text-[15px]">
@@ -96,7 +123,7 @@ export default async function Home() {
 
             <div className="group flex flex-col p-7 sm:p-8 rounded-2xl bg-card border border-border/40 hover:border-primary/20 shadow-[0_2px_12px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-500">
               <div className="mb-6 p-3.5 bg-accent w-fit rounded-xl group-hover:scale-110 transition-transform duration-500">
-                <Banknote className="h-7 w-7 text-primary stroke-[1.5]" />
+                <Banknote className="size-7 text-primary stroke-[1.5]" />
               </div>
               <h3 className="text-xl font-bold mb-3 font-display tracking-tight">Zero Brokerage</h3>
               <p className="text-muted-foreground leading-relaxed text-[15px]">
@@ -106,7 +133,7 @@ export default async function Home() {
 
             <div className="group flex flex-col p-7 sm:p-8 rounded-2xl bg-card border border-border/40 hover:border-primary/20 shadow-[0_2px_12px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-500">
               <div className="mb-6 p-3.5 bg-accent w-fit rounded-xl group-hover:scale-110 transition-transform duration-500">
-                <Users className="h-7 w-7 text-primary stroke-[1.5]" />
+                <Users className="size-7 text-primary stroke-[1.5]" />
               </div>
               <h3 className="text-xl font-bold mb-3 font-display tracking-tight">Student Community</h3>
               <p className="text-muted-foreground leading-relaxed text-[15px]">
@@ -126,11 +153,8 @@ export default async function Home() {
           <p className="text-primary-foreground/70 text-base sm:text-lg mb-8 max-w-lg mx-auto">
             Reach thousands of students looking for a room in your city.
           </p>
-          <Link
-            href="/owner"
-            className="inline-flex items-center bg-white text-foreground font-semibold px-8 py-3.5 rounded-xl hover:bg-white/90 transition-colors text-base"
-          >
-            Get started
+          <Link href="/owner/login" className="inline-flex items-center justify-center bg-white text-foreground px-8 py-3 rounded-lg font-medium hover:bg-muted transition-colors shadow-sm">
+            List your property
           </Link>
         </div>
       </section>

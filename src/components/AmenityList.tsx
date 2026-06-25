@@ -48,13 +48,15 @@ export function AmenityList({ amenities }: { amenities: string[] }) {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-4">
+    <div className="grid grid-cols-2 gap-4">
       {amenities.map((amenity, i) => {
         const Icon = getAmenityIcon(amenity);
         return (
-          <div key={i} className="flex items-center gap-3">
-            <Icon className="h-5 w-5 text-primary shrink-0 stroke-[1.5]" />
-            <span className="text-[15px] text-foreground">{amenity}</span>
+          <div key={i} className="flex items-center gap-4 py-1">
+            <div className="flex items-center justify-center size-10 rounded-xl bg-accent shrink-0">
+              <Icon className="size-5 text-primary stroke-[1.5]" />
+            </div>
+            <span className="text-[15px] text-foreground font-medium">{amenity}</span>
           </div>
         );
       })}

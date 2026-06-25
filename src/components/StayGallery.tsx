@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { ChevronUp, LayoutGrid, ArrowRight, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronUp, LayoutGrid, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface StayGalleryProps {
@@ -19,7 +19,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
     ? images
     : ["https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1200&auto=format&fit=crop"];
 
-  const mainImage = displayImages[0];
+  const [mainImage] = displayImages;
   const sideImages = displayImages.slice(1, 5); // Show up to 4 more images for closed state
 
   const handlePrevious = useCallback((e?: React.MouseEvent) => {
@@ -48,8 +48,9 @@ export function StayGallery({ images, title }: StayGalleryProps) {
   }, [selectedImageIndex, handleClose, handlePrevious, handleNext]);
 
   // Lock body scroll when lightbox is open
+  const isLightboxOpen = selectedImageIndex !== null;
   useEffect(() => {
-    if (selectedImageIndex !== null) {
+    if (isLightboxOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -57,7 +58,25 @@ export function StayGallery({ images, title }: StayGalleryProps) {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [selectedImageIndex]);
+  }, [isLightboxOpen]);
+
+  const renderImageCard = (item: { src: string; originalIndex: number }, key: number, sizes: string) => (
+    <div
+      key={key}
+      className="rounded-xl overflow-hidden relative group border border-border shadow-sm bg-muted cursor-pointer"
+      onClick={() => setSelectedImageIndex(item.originalIndex)}
+    >
+      <Image
+        src={item.src}
+        alt={`${title} photo`}
+        width={800}
+        height={600}
+        sizes={sizes}
+        className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500 ease-out" />
+    </div>
+  );
 
   return (
     <div className="flex flex-col">
@@ -96,7 +115,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                 onClick={handleClose}
                 className="p-2 rounded-full bg-black/5 hover:bg-black/10 text-foreground transition-colors backdrop-blur-md"
               >
-                <X className="w-6 h-6" />
+                <X className="size-6" />
               </button>
             </div>
 
@@ -107,27 +126,30 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                 onClick={handlePrevious}
                 className="absolute left-2 sm:left-6 p-3 rounded-full bg-background/80 hover:bg-background border border-border/50 text-foreground transition-colors shadow-sm z-50 group backdrop-blur-md"
               >
-                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-x-0.5 transition-transform" />
+                <ChevronLeft className="size-5 sm:size-6 group-hover:-translate-x-0.5 transition-transform" />
               </button>
 
               {/* Sharp Foreground Image */}
-              <motion.img
-                key={selectedImageIndex}
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                src={displayImages[selectedImageIndex]}
-                alt={`${title} photo ${selectedImageIndex + 1}`}
-                className="max-w-full max-h-[70vh] rounded-[24px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] ring-1 ring-border/20 object-contain z-20"
-                onClick={(e) => e.stopPropagation()}
-              />
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={selectedImageIndex}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  src={displayImages[selectedImageIndex]}
+                  alt={`${title} photo ${selectedImageIndex + 1}`}
+                  className="max-w-full max-h-[70vh] rounded-[24px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] ring-1 ring-border/20 object-contain z-20"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </AnimatePresence>
 
               {/* Navigation Right */}
               <button
                 onClick={handleNext}
                 className="absolute right-2 sm:right-6 p-3 rounded-full bg-background/80 hover:bg-background border border-border/50 text-foreground transition-colors shadow-sm z-50 group backdrop-blur-md"
               >
-                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight className="size-5 sm:size-6 group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
 
@@ -141,7 +163,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                   <button
                     key={idx}
                     onClick={() => setSelectedImageIndex(idx)}
-                    className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0 transition-all duration-300 ${idx === selectedImageIndex
+                    className={`relative size-16 sm:size-20 rounded-xl overflow-hidden shrink-0 transition-all duration-300 ${idx === selectedImageIndex
                       ? "ring-2 ring-primary ring-offset-2 ring-offset-transparent opacity-100 scale-105 shadow-lg"
                       : "opacity-50 hover:opacity-100 grayscale hover:grayscale-0"
                       }`}
@@ -175,23 +197,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                 {displayImages
                   .map((src, originalIndex) => ({ src, originalIndex }))
                   .filter((_, i) => i % 2 === colIndex)
-                  .map((item, i) => (
-                    <div
-                      key={i}
-                      className="rounded-xl overflow-hidden relative group border border-border shadow-sm bg-muted cursor-pointer"
-                      onClick={() => setSelectedImageIndex(item.originalIndex)}
-                    >
-                      <Image
-                        src={item.src}
-                        alt={`${title} photo`}
-                        width={800}
-                        height={600}
-                        sizes="50vw"
-                        className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500 ease-out" />
-                    </div>
-                  ))}
+                  .map((item, i) => renderImageCard(item, i, "50vw"))}
               </div>
             ))}
           </div>
@@ -203,23 +209,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                 {displayImages
                   .map((src, originalIndex) => ({ src, originalIndex }))
                   .filter((_, i) => i % 3 === colIndex)
-                  .map((item, i) => (
-                    <div
-                      key={i}
-                      className="rounded-xl overflow-hidden relative group border border-border shadow-sm bg-muted cursor-pointer"
-                      onClick={() => setSelectedImageIndex(item.originalIndex)}
-                    >
-                      <Image
-                        src={item.src}
-                        alt={`${title} photo`}
-                        width={800}
-                        height={600}
-                        sizes="33vw"
-                        className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500 ease-out" />
-                    </div>
-                  ))}
+                  .map((item, i) => renderImageCard(item, i, "33vw"))}
               </div>
             ))}
           </div>
@@ -234,7 +224,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
               }}
               className="bg-white/90 backdrop-blur-md text-primary px-6 py-2.5 rounded-full font-[family-name:var(--font-dm-sans)] font-semibold text-sm shadow-lg flex items-center gap-2 hover:scale-95 hover:bg-white transition-all border border-border"
             >
-              <ChevronUp className="w-5 h-5" />
+              <ChevronUp className="size-5" />
               Show less
             </button>
           </div>
@@ -247,11 +237,11 @@ export function StayGallery({ images, title }: StayGalleryProps) {
         */
         <>
           <div
-            className="relative w-full aspect-[16/10] sm:aspect-auto sm:h-[40vh] max-h-[450px] rounded-2xl overflow-hidden shadow-sm border border-border bg-muted"
+            className="relative w-full aspect-[4/3] sm:aspect-auto sm:h-[55vh] max-h-[550px] rounded-3xl overflow-hidden shadow-sm border border-border bg-muted"
           >
             {/* Mobile/Tablet View - Single Image */}
             <div
-              className="md:hidden relative h-full w-full cursor-pointer group"
+              className="md:hidden relative size-full cursor-pointer group"
               onClick={() => setSelectedImageIndex(0)}
             >
               <Image
@@ -269,11 +259,21 @@ export function StayGallery({ images, title }: StayGalleryProps) {
               )}
             </div>
 
-            {/* Desktop View - Bento Grid */}
-            <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-full w-full absolute inset-0">
+            {/* Desktop View - Adaptive Gallery Grid */}
+            <div className={`hidden md:grid gap-2 size-full absolute inset-0 ${
+              displayImages.length === 1 ? 'grid-cols-1' :
+              displayImages.length === 2 ? 'grid-cols-2' :
+              displayImages.length === 3 ? 'grid-cols-3' :
+              'grid-cols-4 grid-rows-2'
+            }`}>
               {/* Main large image */}
               <div
-                className={`relative ${sideImages.length > 0 ? "col-span-2 row-span-2" : "col-span-4 row-span-2"} bg-muted overflow-hidden group/main cursor-pointer`}
+                className={`relative bg-muted overflow-hidden group/main cursor-pointer ${
+                  displayImages.length === 1 ? '' :
+                  displayImages.length === 2 ? '' :
+                  displayImages.length === 3 ? 'row-span-1' :
+                  sideImages.length > 0 ? 'col-span-2 row-span-2' : 'col-span-4 row-span-2'
+                }`}
                 onClick={() => setSelectedImageIndex(0)}
               >
                 <Image
@@ -281,24 +281,24 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                   alt={`${title} main photo`}
                   fill
                   priority
-                  sizes="(max-width: 1200px) 50vw, 800px"
+                  sizes={displayImages.length <= 2 ? "(max-width: 1200px) 50vw, 800px" : "(max-width: 1200px) 50vw, 600px"}
                   className="object-cover transition-transform duration-700 ease-out group-hover/main:scale-105"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover/main:bg-black/10 transition-colors duration-500 ease-out" />
               </div>
 
-              {/* Side smaller images */}
+              {/* Side images */}
               {sideImages.map((img, i) => (
                 <div
                   key={i}
-                  className="relative col-span-1 row-span-1 bg-muted overflow-hidden group/side cursor-pointer"
+                  className="relative bg-muted overflow-hidden group/side cursor-pointer"
                   onClick={() => setSelectedImageIndex(i + 1)}
                 >
                   <Image
                     src={img}
                     alt={`${title} photo ${i + 2}`}
                     fill
-                    sizes="25vw"
+                    sizes={displayImages.length <= 3 ? "33vw" : "25vw"}
                     className="object-cover transition-transform duration-700 ease-out group-hover/side:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover/side:bg-black/10 transition-colors duration-500 ease-out" />
@@ -306,23 +306,17 @@ export function StayGallery({ images, title }: StayGalleryProps) {
               ))}
             </div>
 
-          </div>
-
-          {/* External Gallery Control */}
-          {displayImages.length > 1 && (
-            <div className={`flex mt-3 justify-center ${displayImages.length <= 5 ? 'md:hidden' : ''}`}>
+            {/* Inline "Show all photos" pill overlay */}
+            {displayImages.length > 1 && (
               <button
                 onClick={() => setIsExpanded(true)}
-                className="w-full flex items-center justify-between px-5 py-3 rounded-xl border border-border bg-card hover:bg-muted transition-colors group/btn shadow-sm"
+                className="absolute bottom-4 right-4 z-30 bg-white/95 backdrop-blur-sm text-foreground px-5 py-2.5 rounded-xl font-semibold text-sm shadow-lg hover:bg-white hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2 border border-black/5 cursor-pointer"
               >
-                <span className="font-[family-name:var(--font-dm-sans)] font-semibold text-sm tracking-wide uppercase text-foreground">View all {displayImages.length} photos</span>
-                <div className="flex items-center gap-2 text-primary">
-                  <span className="text-xs font-semibold uppercase tracking-wider">Expand Grid</span>
-                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                </div>
+                <LayoutGrid className="size-4" />
+                Show all photos
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </>
       )}
     </div>

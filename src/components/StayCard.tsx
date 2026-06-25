@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { BadgeCheck, Heart, MapPin, Snowflake, Users, UtensilsCrossed, Star, ShieldAlert, Wifi } from "lucide-react";
+import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Property } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
 
@@ -27,14 +27,21 @@ export function StayCard({ property, isSaved = false, onSaveToggle, priorityImag
     amenities = [],
     is_trusted,
     is_featured,
-    is_unverified,
   } = property;
 
-  const displayImage = images?.[0] || "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=60&w=480&auto=format&fit=crop";
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const validImages = images && images.length > 0 
+    ? images 
+    : ["https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=60&w=480&auto=format&fit=crop"];
 
   const formatPrice = (price?: number) => {
     if (!price) return "Price on request";
-    return "₹" + Number(price).toLocaleString("en-IN");
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(price);
   };
 
   const getSharingText = () => {
@@ -53,111 +60,157 @@ export function StayCard({ property, isSaved = false, onSaveToggle, priorityImag
   const displayLocality = locality || city_name;
   const sharingText = getSharingText();
 
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === 0 ? validImages.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === validImages.length - 1 ? 0 : prev + 1));
+  };
+
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-[14px] border border-border bg-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-14px_rgba(24,24,27,0.18)]">
+    <div className="group block w-full relative transition-all duration-300 cursor-pointer">
       {/* Photo */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[16px] bg-muted mb-3 group/carousel">
         <Image
-          src={displayImage}
+          src={validImages[currentImageIndex]}
           alt={name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          priority={priorityImage}
-          loading={priorityImage ? undefined : "lazy"}
-          className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+          priority={priorityImage && currentImageIndex === 0}
+          loading={priorityImage && currentImageIndex === 0 ? undefined : "lazy"}
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
 
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
+        {/* Carousel Navigation Controls (Only show if multiple images) */}
+        {validImages.length > 1 && (
+          <>
+            <button
+              onClick={handlePrevImage}
+              className="absolute left-2 top-1/2 -translate-y-1/2 flex size-7 items-center justify-center rounded-full bg-white/90 text-black opacity-0 transition-opacity group-hover/carousel:opacity-100 hover:scale-110 shadow-sm z-20"
+            >
+              <ChevronLeft className="size-4" />
+            </button>
+            <button
+              onClick={handleNextImage}
+              className="absolute right-2 top-1/2 -translate-y-1/2 flex size-7 items-center justify-center rounded-full bg-white/90 text-black opacity-0 transition-opacity group-hover/carousel:opacity-100 hover:scale-110 shadow-sm z-20"
+            >
+              <ChevronRight className="size-4" />
+            </button>
+
+            {/* Gradient for Carousel Dots */}
+            <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/20 to-transparent z-10 pointer-events-none" />
+
+            {/* Real Carousel Dots */}
+            <div className="absolute bottom-3 inset-x-0 flex justify-center gap-1.5 z-20">
+              {validImages.map((_, idx) => {
+                // Show at most 5 dots. If there are more than 5 images, just show 5 to prevent overflow.
+                if (idx > 4) return null;
+                return (
+                  <div 
+                    key={idx}
+                    className={cn(
+                      "h-1.5 rounded-full bg-white shadow-sm transition-all duration-300",
+                      idx === currentImageIndex || (idx === 4 && currentImageIndex >= 4)
+                        ? "opacity-100 w-1.5 scale-110" 
+                        : "opacity-60 w-1.5 scale-90"
+                    )} 
+                  />
+                );
+              })}
+            </div>
+          </>
+        )}
+
+        {/* Minimalist Badges */}
+        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-20">
           {Boolean(is_trusted) && (
-            <span className="inline-flex items-center gap-1 bg-primary text-primary-foreground py-1 px-2.5 rounded-lg text-xs font-semibold">
-              <BadgeCheck className="h-3.5 w-3.5" />
+            <span className="inline-flex items-center gap-1 bg-white text-black py-1 px-2 rounded-md text-[10px] uppercase font-bold tracking-wider shadow-sm">
               Verified
             </span>
           )}
           {Boolean(is_featured) && (
-            <span className="inline-flex items-center gap-1 bg-amber-500 text-white py-1 px-2.5 rounded-lg text-xs font-semibold">
-              <Star className="h-3.5 w-3.5 fill-current" />
-              Featured
-            </span>
-          )}
-          {Boolean(is_unverified) && (
-            <span className="inline-flex items-center gap-1 bg-destructive text-white py-1 px-2.5 rounded-lg text-xs font-semibold">
-              <ShieldAlert className="h-3.5 w-3.5" />
-              Unverified
+            <span className="inline-flex items-center gap-1 bg-white text-black py-1 px-2 rounded-md text-[10px] uppercase font-bold tracking-wider shadow-sm">
+              Guest Favorite
             </span>
           )}
         </div>
 
-        {/* Heart */}
+        {/* Premium Heart */}
         {onSaveToggle && (
           <button
+            suppressHydrationWarning
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               onSaveToggle(slug);
             }}
-            className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-foreground backdrop-blur-sm transition-all hover:bg-white active:scale-95 z-10"
+            className="absolute top-3 right-3 flex size-9 items-center justify-center rounded-full bg-white/95 backdrop-blur-xl shadow-lg border border-black/5 transition-all duration-300 hover:scale-110 active:scale-90 z-20 group"
             aria-label={isSaved ? "Remove from saved" : "Save stay"}
           >
             <Heart
               className={cn(
-                "h-4 w-4 transition-colors",
-                isSaved ? "fill-destructive text-destructive" : "text-foreground"
+                "h-[18px] w-[18px] transition-colors duration-300",
+                isSaved ? "fill-rose-500 text-rose-500" : "fill-transparent text-muted-foreground group-hover:text-foreground"
               )}
+              strokeWidth={isSaved ? 2 : 2.5}
             />
           </button>
         )}
       </div>
 
-      {/* Content */}
-      <div className="flex flex-col flex-1 p-4">
+      {/* Content - Vertically Stacked */}
+      <div className="flex flex-col px-0.5">
+        {/* Price (First Line) */}
+        <div className="mb-1">
+          {lowest_price ? (
+            <div className="text-[16px]">
+              <span className="font-bold text-foreground tracking-tight">{formatPrice(lowest_price)}</span>
+              <span className="text-foreground ml-1">/mo</span>
+            </div>
+          ) : (
+            <div className="text-[15px] font-medium text-foreground tracking-tight">
+              {formatPrice()}
+            </div>
+          )}
+        </div>
+
         {/* Name */}
-        <h3 className="font-display text-lg font-bold tracking-tight text-foreground line-clamp-1 mb-1 leading-snug group-hover:text-primary transition-colors">
+        <h3 className="text-[15px] font-semibold text-foreground line-clamp-1 leading-snug">
           {name}
         </h3>
 
         {/* Location */}
-        <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-3">
-          <MapPin className="h-3.5 w-3.5 shrink-0" />
-          <span className="line-clamp-1">{displayLocality}</span>
+        <div className="text-[14px] text-muted-foreground line-clamp-1 mt-0.5">
+          {displayLocality}
         </div>
 
-        {/* Price */}
-        <div className="flex items-baseline mb-3">
-          <span className="text-xl font-semibold tracking-tight text-primary tabular-nums">
-            {formatPrice(lowest_price)}
-          </span>
-          {Boolean(lowest_price) && (
-            <span className="text-sm text-muted-foreground ml-1">/mo</span>
-          )}
-        </div>
-
-        {/* Amenity Chips */}
-        <div className="flex flex-wrap gap-1.5 mt-auto">
+        {/* Elegant Trust + Fit Row */}
+        <div className="flex items-center gap-1.5 text-[14px] text-muted-foreground mt-0.5 flex-wrap">
           {sharingText && (
-            <span className="inline-flex items-center gap-1 bg-accent text-accent-foreground px-2.5 py-1 rounded-md text-xs font-medium">
-              <Users className="h-3 w-3" />
-              {sharingText}
-            </span>
+            <span>{sharingText}</span>
           )}
           {hasAC && (
-            <span className="inline-flex items-center gap-1 bg-accent text-accent-foreground px-2.5 py-1 rounded-md text-xs font-medium">
-              <Snowflake className="h-3 w-3" />
-              AC
-            </span>
+            <>
+              {sharingText && <span className="text-[10px]">·</span>}
+              <span>AC</span>
+            </>
           )}
           {hasFood && (
-            <span className="inline-flex items-center gap-1 bg-accent text-accent-foreground px-2.5 py-1 rounded-md text-xs font-medium">
-              <UtensilsCrossed className="h-3 w-3" />
-              Food
-            </span>
+            <>
+              {(sharingText || hasAC) && <span className="text-[10px]">·</span>}
+              <span>Food</span>
+            </>
           )}
           {hasWifi && (
-            <span className="inline-flex items-center gap-1 bg-accent text-accent-foreground px-2.5 py-1 rounded-md text-xs font-medium">
-              <Wifi className="h-3 w-3" />
-              WiFi
-            </span>
+            <>
+              {(sharingText || hasAC || hasFood) && <span className="text-[10px]">·</span>}
+              <span>WiFi</span>
+            </>
           )}
         </div>
       </div>

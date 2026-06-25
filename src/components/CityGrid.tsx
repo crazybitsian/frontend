@@ -10,7 +10,7 @@ const CITY_IMAGES: Record<string, string> = {
   mumbai: "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?q=80&w=800&auto=format&fit=crop",
   kota: "https://images.unsplash.com/photo-1622308644420-b00eb0ae0f70?q=80&w=800&auto=format&fit=crop", // High quality Kota image
   jaipur: "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=800&auto=format&fit=crop",
-  hyderabad: "https://images.unsplash.com/photo-1572883454114-efaa1da1e897?q=80&w=800&auto=format&fit=crop",
+  hyderabad: "https://images.unsplash.com/photo-1580227181515-fb19356f103b?q=80&w=800&auto=format&fit=crop",
   "delhi-ncr": "https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop", // Added Delhi NCR
 };
 
@@ -31,7 +31,7 @@ export function CityGrid({ cities }: { cities: City[] }) {
 
   return (
     <div className="w-full flex-1 h-full min-h-0">
-      <div className="grid grid-cols-2 md:grid-cols-4 md:grid-rows-3 gap-3 md:gap-4 lg:gap-6 w-full h-full">
+      <div className="grid grid-cols-2 md:grid-cols-4 md:grid-rows-3 gap-3 md:gap-4 lg:gap-6 size-full">
         {displayCities.map((city, index) => {
           const imageUrl =
             city.image ||
@@ -39,7 +39,7 @@ export function CityGrid({ cities }: { cities: City[] }) {
             DEFAULT_CITY_IMAGE;
 
           // Asymmetrical Mastery Layout Logic (4x3 Grid)
-          let gridClass = "";
+          let gridClass: string;
           const len = displayCities.length;
           switch (index) {
             case 0:
@@ -66,9 +66,7 @@ export function CityGrid({ cities }: { cities: City[] }) {
             case 5:
               gridClass = len === 6
                 ? "col-span-1 row-span-1 md:col-span-2 md:row-span-1" // Wide if 6
-                : len === 7
-                  ? "col-span-1 row-span-1 md:col-span-1 md:row-span-1" // Small if 7
-                  : "col-span-1 row-span-1 md:col-span-1 md:row-span-1"; // Small if 8
+                : "col-span-1 row-span-1 md:col-span-1 md:row-span-1"; // Small if 7 or 8
               break;
             case 6:
               gridClass = "col-span-1 row-span-1 md:col-span-1 md:row-span-1"; // Small if 7 or 8
@@ -113,8 +111,8 @@ export function CityGrid({ cities }: { cities: City[] }) {
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-center h-10 w-10 md:h-12 md:w-12 rounded-full bg-white/20 backdrop-blur-md text-white opacity-0 transition-all duration-500 group-hover:opacity-100">
-                    <ArrowRight className="h-5 w-5 md:h-6 md:w-6" />
+                  <div className="flex items-center justify-center size-10 md:size-12 rounded-full bg-white/20 backdrop-blur-md text-white opacity-0 transition-all duration-500 group-hover:opacity-100">
+                    <ArrowRight className="size-5 md:size-6" />
                   </div>
                 </div>
               </div>
