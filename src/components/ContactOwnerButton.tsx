@@ -3,6 +3,7 @@
 import { PhoneCall } from "lucide-react";
 import { Property } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface ContactOwnerButtonProps {
   property: Property;
@@ -11,9 +12,12 @@ interface ContactOwnerButtonProps {
 }
 
 export function ContactOwnerButton({ property, className, variant = "full" }: ContactOwnerButtonProps) {
+  const [error, setError] = useState(false);
+
   const handleContact = () => {
     if (!property.owner_mobile) {
-      alert("Owner contact not available");
+      setError(true);
+      setTimeout(() => setError(false), 3000);
       return;
     }
 
@@ -45,10 +49,12 @@ export function ContactOwnerButton({ property, className, variant = "full" }: Co
     return (
       <button 
         onClick={handleContact}
-        className={cn("bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-xl transition-colors flex items-center gap-2 text-sm", className)}
+        className={cn("font-semibold py-3 px-6 rounded-xl transition-colors flex items-center gap-2 text-sm", 
+          error ? "bg-destructive/10 text-destructive hover:bg-destructive/20" : "bg-primary hover:bg-primary/90 text-primary-foreground",
+          className)}
       >
         <PhoneCall className="h-4 w-4" />
-        Contact owner
+        {error ? "Contact support" : "Contact owner"}
       </button>
     );
   }
@@ -56,10 +62,12 @@ export function ContactOwnerButton({ property, className, variant = "full" }: Co
   return (
     <button 
       onClick={handleContact}
-      className={cn("w-full bg-primary text-primary-foreground px-8 py-4 rounded-lg font-bold flex items-center justify-center gap-3 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20", className)}
+      className={cn("w-full px-8 py-4 rounded-lg font-bold flex items-center justify-center gap-3 transition-all", 
+        error ? "bg-destructive/10 text-destructive hover:bg-destructive/20 shadow-none" : "bg-primary text-primary-foreground hover:opacity-90 active:scale-95 shadow-lg shadow-primary/20",
+        className)}
     >
       <PhoneCall className="w-5 h-5" />
-      Contact owner
+      {error ? "Owner contact unavailable. Email help@apnakamra.com" : "Contact owner"}
     </button>
   );
 }

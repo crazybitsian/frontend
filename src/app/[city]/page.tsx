@@ -39,14 +39,14 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   const resolvedParams = await params;
   
   let cityInfo = null;
-  let initialProperties: Property[] = [];
+  let allCities: any[] = [];
   try {
-    const cities = await api.getCities();
-    cityInfo = cities.find(c => c.slug === resolvedParams.city);
+    allCities = await api.getCities();
+    cityInfo = allCities.find(c => c.slug === resolvedParams.city);
   } catch (e) {
     // Ignore error
   }
-
+  let initialProperties: Property[] = [];
   try {
     initialProperties = await api.getProperties({ city: resolvedParams.city });
   } catch (e) {
@@ -56,35 +56,14 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
   const cityName = cityInfo?.name || resolvedParams.city.charAt(0).toUpperCase() + resolvedParams.city.slice(1);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/40">
-        <div className="container mx-auto px-4 max-w-6xl flex items-center justify-between h-14">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="flex items-center justify-center h-9 w-9 rounded-lg hover:bg-muted transition-colors"
-              aria-label="Back to home"
-            >
-              <ArrowLeft className="h-5 w-5 text-foreground" />
-            </Link>
-            <h1 className="font-display text-lg font-bold tracking-tight">{cityName}</h1>
-          </div>
-          <Link
-            href="/"
-            className="font-display text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
-          >
-            ApnaKamra
-          </Link>
-        </div>
-      </header>
-
-      {/* Main Content */}
+    <div className="flex flex-col min-h-screen bg-background text-foreground relative">
+      {/* Main Content - No standard header, CityListingClient handles the floating island */}
       <main className="flex-1">
-        <div className="container mx-auto px-4 max-w-6xl py-6">
+        <div className="container mx-auto px-4 max-w-6xl py-4 pt-20 md:pt-24">
           <CityListingClient
             citySlug={resolvedParams.city}
             cityName={cityName}
+            cities={allCities}
             initialCount={initialProperties.length}
             initialProperties={initialProperties}
           />

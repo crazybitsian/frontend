@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { UserProfile } from "./UserProfile";
+import { AnimatePresence, motion } from "framer-motion";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -46,37 +47,47 @@ export function Navbar() {
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="md:hidden flex items-center justify-center h-10 w-10 rounded-lg hover:bg-muted transition-colors"
-          aria-label="Toggle menu"
+          aria-label="Menu"
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       {/* Mobile Drawer */}
-      {mobileOpen && (
-        <div className="md:hidden border-t border-border/40 bg-background px-4 pb-6 pt-4 space-y-4">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileOpen(false)}
-              className="block text-base font-medium text-foreground py-2"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <div className="pt-2 pb-4 border-b border-border/40">
-            <UserProfile />
-          </div>
-          <Link
-            href="/owner/login"
-            onClick={() => setMobileOpen(false)}
-            className="block w-full text-center text-sm font-semibold bg-primary text-primary-foreground px-5 py-3 rounded-lg hover:bg-primary/90 transition-colors mt-4"
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="md:hidden overflow-hidden border-t border-border/40 bg-background"
           >
-            List your property
-          </Link>
-        </div>
-      )}
+            <div className="px-4 pb-6 pt-4 space-y-4">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="block text-base font-medium text-foreground py-2"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <div className="pt-2 pb-4 border-b border-border/40 flex justify-center">
+                <UserProfile />
+              </div>
+              <Link
+                href="/owner/login"
+                onClick={() => setMobileOpen(false)}
+                className="block w-full text-center text-sm font-semibold bg-primary text-primary-foreground px-5 py-3 rounded-lg hover:bg-primary/90 transition-colors mt-4"
+              >
+                List your property
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

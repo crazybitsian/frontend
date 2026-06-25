@@ -33,7 +33,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FAFAF9]">
+    <div className="flex flex-col min-h-screen bg-background">
       <main className="flex-grow max-w-6xl mx-auto px-6 py-24 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32 items-start">
           {/* Left Column: Branding & Info */}
@@ -96,7 +96,7 @@ export default function ContactPage() {
                   <div className="space-y-2">
                     <label className="block font-sans text-sm text-muted-foreground font-medium" htmlFor="fullName">Full Name</label>
                     <input
-                      className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground transition-all placeholder:text-[#B0B0B0] focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground transition-all placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                       id="fullName"
                       name="fullName"
                       placeholder="Arjun Singh"
@@ -109,7 +109,7 @@ export default function ContactPage() {
                     <div className="flex w-full items-center px-4 py-3 border border-border rounded-xl bg-background transition-all focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent">
                       <span className="text-muted-foreground font-medium mr-2 whitespace-nowrap">+91</span>
                       <input 
-                        className="w-full bg-transparent text-foreground placeholder:text-[#B0B0B0] outline-none" 
+                        className="w-full bg-transparent text-foreground placeholder:text-muted-foreground outline-none" 
                         id="mobileNumber" 
                         name="mobileNumber" 
                         placeholder="9876543210" 
@@ -124,7 +124,7 @@ export default function ContactPage() {
                 <div className="space-y-2">
                   <label className="block font-sans text-sm text-muted-foreground font-medium" htmlFor="email">Email Address</label>
                   <input
-                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground transition-all placeholder:text-[#B0B0B0] focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground transition-all placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                     id="email"
                     name="email"
                     placeholder="arjun@university.edu"
@@ -136,7 +136,7 @@ export default function ContactPage() {
                 <div className="space-y-2">
                   <label className="block font-sans text-sm text-muted-foreground font-medium" htmlFor="message">Message</label>
                   <textarea
-                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground transition-all placeholder:text-[#B0B0B0] resize-none focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground transition-all placeholder:text-muted-foreground resize-none focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                     id="message"
                     name="message"
                     placeholder="I'm looking for a single-sharing room in Bangalore near Koramangala..."

@@ -48,8 +48,9 @@ export function StayGallery({ images, title }: StayGalleryProps) {
   }, [selectedImageIndex, handleClose, handlePrevious, handleNext]);
 
   // Lock body scroll when lightbox is open
+  const isLightboxOpen = selectedImageIndex !== null;
   useEffect(() => {
-    if (selectedImageIndex !== null) {
+    if (isLightboxOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -57,7 +58,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [selectedImageIndex]);
+  }, [isLightboxOpen]);
 
   return (
     <div className="flex flex-col">
@@ -111,16 +112,19 @@ export function StayGallery({ images, title }: StayGalleryProps) {
               </button>
 
               {/* Sharp Foreground Image */}
-              <motion.img
-                key={selectedImageIndex}
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                src={displayImages[selectedImageIndex]}
-                alt={`${title} photo ${selectedImageIndex + 1}`}
-                className="max-w-full max-h-[70vh] rounded-[24px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] ring-1 ring-border/20 object-contain z-20"
-                onClick={(e) => e.stopPropagation()}
-              />
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={selectedImageIndex}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  src={displayImages[selectedImageIndex]}
+                  alt={`${title} photo ${selectedImageIndex + 1}`}
+                  className="max-w-full max-h-[70vh] rounded-[24px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] ring-1 ring-border/20 object-contain z-20"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </AnimatePresence>
 
               {/* Navigation Right */}
               <button
@@ -247,7 +251,7 @@ export function StayGallery({ images, title }: StayGalleryProps) {
         */
         <>
           <div
-            className="relative w-full aspect-[16/10] sm:aspect-auto sm:h-[40vh] max-h-[450px] rounded-2xl overflow-hidden shadow-sm border border-border bg-muted"
+            className="relative w-full aspect-[4/3] sm:aspect-auto sm:h-[55vh] max-h-[550px] rounded-3xl overflow-hidden shadow-sm border border-border bg-muted"
           >
             {/* Mobile/Tablet View - Single Image */}
             <div
@@ -269,11 +273,21 @@ export function StayGallery({ images, title }: StayGalleryProps) {
               )}
             </div>
 
-            {/* Desktop View - Bento Grid */}
-            <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-full w-full absolute inset-0">
+            {/* Desktop View - Adaptive Gallery Grid */}
+            <div className={`hidden md:grid gap-2 h-full w-full absolute inset-0 ${
+              displayImages.length === 1 ? 'grid-cols-1' :
+              displayImages.length === 2 ? 'grid-cols-2' :
+              displayImages.length === 3 ? 'grid-cols-3' :
+              'grid-cols-4 grid-rows-2'
+            }`}>
               {/* Main large image */}
               <div
-                className={`relative ${sideImages.length > 0 ? "col-span-2 row-span-2" : "col-span-4 row-span-2"} bg-muted overflow-hidden group/main cursor-pointer`}
+                className={`relative bg-muted overflow-hidden group/main cursor-pointer ${
+                  displayImages.length === 1 ? '' :
+                  displayImages.length === 2 ? '' :
+                  displayImages.length === 3 ? 'row-span-1' :
+                  sideImages.length > 0 ? 'col-span-2 row-span-2' : 'col-span-4 row-span-2'
+                }`}
                 onClick={() => setSelectedImageIndex(0)}
               >
                 <Image
@@ -281,24 +295,24 @@ export function StayGallery({ images, title }: StayGalleryProps) {
                   alt={`${title} main photo`}
                   fill
                   priority
-                  sizes="(max-width: 1200px) 50vw, 800px"
+                  sizes={displayImages.length <= 2 ? "(max-width: 1200px) 50vw, 800px" : "(max-width: 1200px) 50vw, 600px"}
                   className="object-cover transition-transform duration-700 ease-out group-hover/main:scale-105"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover/main:bg-black/10 transition-colors duration-500 ease-out" />
               </div>
 
-              {/* Side smaller images */}
+              {/* Side images */}
               {sideImages.map((img, i) => (
                 <div
                   key={i}
-                  className="relative col-span-1 row-span-1 bg-muted overflow-hidden group/side cursor-pointer"
+                  className="relative bg-muted overflow-hidden group/side cursor-pointer"
                   onClick={() => setSelectedImageIndex(i + 1)}
                 >
                   <Image
                     src={img}
                     alt={`${title} photo ${i + 2}`}
                     fill
-                    sizes="25vw"
+                    sizes={displayImages.length <= 3 ? "33vw" : "25vw"}
                     className="object-cover transition-transform duration-700 ease-out group-hover/side:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover/side:bg-black/10 transition-colors duration-500 ease-out" />
@@ -306,23 +320,17 @@ export function StayGallery({ images, title }: StayGalleryProps) {
               ))}
             </div>
 
-          </div>
-
-          {/* External Gallery Control */}
-          {displayImages.length > 1 && (
-            <div className={`flex mt-3 justify-center ${displayImages.length <= 5 ? 'md:hidden' : ''}`}>
+            {/* Inline "Show all photos" pill overlay */}
+            {displayImages.length > 1 && (
               <button
                 onClick={() => setIsExpanded(true)}
-                className="w-full flex items-center justify-between px-5 py-3 rounded-xl border border-border bg-card hover:bg-muted transition-colors group/btn shadow-sm"
+                className="absolute bottom-4 right-4 z-30 bg-white/95 backdrop-blur-sm text-foreground px-5 py-2.5 rounded-xl font-semibold text-sm shadow-lg hover:bg-white hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2 border border-black/5 cursor-pointer"
               >
-                <span className="font-[family-name:var(--font-dm-sans)] font-semibold text-sm tracking-wide uppercase text-foreground">View all {displayImages.length} photos</span>
-                <div className="flex items-center gap-2 text-primary">
-                  <span className="text-xs font-semibold uppercase tracking-wider">Expand Grid</span>
-                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                </div>
+                <LayoutGrid className="w-4 h-4" />
+                Show all photos
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </>
       )}
     </div>

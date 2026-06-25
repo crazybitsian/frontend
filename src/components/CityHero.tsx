@@ -247,7 +247,7 @@ export function CityHero({ cities }: CityHeroProps) {
         >
           Find your place.
           <br />
-          Find your people.
+          Find your peace.
         </motion.h1>
 
         {/* Frosted Search Bar */}

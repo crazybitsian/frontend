@@ -156,7 +156,7 @@ export default function ProfilePage() {
 
         {/* Tab Navigation */}
         <div className="container mx-auto max-w-6xl px-4 md:px-8 flex items-center gap-8 overflow-x-auto no-scrollbar border-t border-border/50 pt-2">
-          {["Overview", "Wishlist", "Inquiries", "Preferences"].map((tab) => (
+          {["Overview", "Wishlist", "Inquiries"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab.toLowerCase())}
@@ -197,85 +197,14 @@ export default function ProfilePage() {
                     <span className="text-muted-foreground text-sm font-medium">Saved Properties</span>
                     <span className="font-bold font-display text-xl text-foreground">{wishlistSlugs.length}</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-border">
-                    <span className="text-muted-foreground text-sm font-medium">Active Inquiries</span>
-                    <span className="font-bold font-display text-xl text-foreground">{inquiries.length}</span>
-                  </div>
                 </div>
               </div>
 
-              {/* Preferences Quick Card */}
-              <div className="bg-card border border-border rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow">
-                <h3 className="font-display font-bold text-lg mb-4 text-foreground flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-primary" /> Current Search
-                </h3>
-                {preferences ? (
-                  <div className="flex flex-wrap gap-2">
-                    {preferences.budget && <span className="bg-muted text-muted-foreground font-medium text-xs px-3 py-1.5 rounded-full border border-border/50">Budget: <span className="text-foreground font-semibold">{preferences.budget}</span></span>}
-                    {preferences.city && <span className="bg-muted text-muted-foreground font-medium text-xs px-3 py-1.5 rounded-full border border-border/50">City: <span className="text-foreground font-semibold">{preferences.city}</span></span>}
-                    {preferences.type && <span className="bg-muted text-muted-foreground font-medium text-xs px-3 py-1.5 rounded-full border border-border/50">Type: <span className="text-foreground font-semibold">{preferences.type}</span></span>}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground mb-4">No active preferences set.</p>
-                )}
-                <button 
-                  onClick={() => setActiveTab("preferences")}
-                  className="mt-6 w-full py-3 bg-muted hover:bg-border border border-border text-foreground text-sm font-semibold rounded-xl transition-colors"
-                >
-                  Edit Preferences
-                </button>
-              </div>
             </div>
 
             {/* Right Column (Recent Activity) */}
             <div className="md:col-span-8 flex flex-col gap-6">
               
-              {/* Active Inquiry Hero Card */}
-              {inquiries.length > 0 ? (
-                <div className="bg-card border border-border rounded-3xl p-2 sm:p-2 shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row gap-6 relative overflow-hidden group">
-                  <div className="relative w-full sm:w-64 h-48 sm:h-full rounded-2xl overflow-hidden shrink-0 bg-muted">
-                    <Image
-                      src={inquiries[0].image || "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2070&auto=format&fit=crop"}
-                      alt="Premium Room"
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full border border-border shadow-sm">
-                      <span className="text-[10px] font-bold tracking-widest uppercase text-primary flex items-center gap-1.5">
-                        <Clock className="w-3 h-3" /> Awaiting Response
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex-1 py-6 pr-6 pl-4 sm:pl-0 flex flex-col">
-                    <h3 className="font-display font-bold text-2xl text-foreground mb-2 leading-tight line-clamp-2">
-                      {inquiries[0].name}
-                    </h3>
-                    <p className="text-muted-foreground flex items-center gap-1.5 text-sm mb-6 font-medium">
-                      <MapPin className="w-4 h-4 text-primary/70" /> {inquiries[0].locality || "Location"}, {inquiries[0].city}
-                    </p>
-                    
-                    <div className="mt-auto grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-1">Inquiry Date</p>
-                        <p className="font-semibold text-foreground">{new Date(inquiries[0].date).toLocaleDateString("en-IN", { day: 'numeric', month: 'short', year: 'numeric'})}</p>
-                      </div>
-                      <div>
-                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-1">Monthly Rent</p>
-                        <p className="font-bold text-foreground flex items-center">
-                          <IndianRupee className="w-4 h-4 mr-0.5 text-primary" /> {inquiries[0].rent ? Number(inquiries[0].rent).toLocaleString("en-IN") : "TBD"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="bg-card border border-border rounded-3xl p-8 shadow-sm text-center flex flex-col items-center justify-center">
-                   <Clock className="w-10 h-10 text-muted-foreground/30 mb-4" />
-                   <p className="font-display font-bold text-lg text-foreground">No active inquiries</p>
-                   <p className="text-muted-foreground text-sm">When you contact an owner, it will appear here.</p>
-                </div>
-              )}
-
               {/* Recently Viewed Grid */}
               {recentlyViewed.length > 0 && (
                 <div className="bg-card border border-border rounded-3xl p-8 shadow-sm hover:shadow-md transition-shadow">
@@ -367,16 +296,6 @@ export default function ProfilePage() {
             <h2 className="font-display text-3xl font-bold text-foreground mb-4">Past Inquiries</h2>
             <p className="text-muted-foreground max-w-md mx-auto">
               Track the status of properties you have contacted. (API integration pending).
-            </p>
-          </div>
-        )}
-
-        {activeTab === "preferences" && (
-          <div className="bg-card border border-border rounded-3xl p-16 text-center shadow-sm">
-            <Settings className="w-16 h-16 text-muted-foreground/30 mx-auto mb-6" />
-            <h2 className="font-display text-3xl font-bold text-foreground mb-4">Personal Preferences</h2>
-            <p className="text-muted-foreground max-w-md mx-auto">
-              Set your default budget, sharing preferences, and dietary requirements to get personalized recommendations.
             </p>
           </div>
         )}

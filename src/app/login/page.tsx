@@ -22,9 +22,8 @@ export default function LoginPage() {
     }
 
     localStorage.setItem("apnakamra_user", mobile);
-      if (name) localStorage.setItem("apnakamra_user_name", name);
-      router.push("/profile");
-    }
+    if (name) localStorage.setItem("apnakamra_user_name", name);
+    router.push("/profile");
   };
 
   return (
