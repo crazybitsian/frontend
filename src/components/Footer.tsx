@@ -66,11 +66,8 @@ export function Footer() {
             <p className="text-sm text-white/50 mb-4 leading-relaxed">
               Reach thousands of students looking for a room. List your property for free.
             </p>
-            <Link
-              href="/owner"
-              className="inline-flex items-center text-sm font-semibold bg-white text-foreground px-5 py-2.5 rounded-lg hover:bg-white/90 transition-colors"
-            >
-              Get started
+            <Link href="/owner/login" className="inline-flex items-center justify-center bg-primary text-primary-foreground px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
+              List your property
             </Link>
           </div>
         </div>

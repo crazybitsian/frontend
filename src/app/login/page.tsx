@@ -4,112 +4,123 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim() && mobile.trim()) {
-      localStorage.setItem("apnakamra_user", JSON.stringify({ name, mobile }));
+    setError("");
+    
+    if (mobile.length !== 10) {
+      setError("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+
+    localStorage.setItem("apnakamra_user", mobile);
+      if (name) localStorage.setItem("apnakamra_user_name", name);
       router.push("/profile");
-      router.refresh();
     }
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-background overflow-hidden selection:bg-primary/20 selection:text-primary">
-      {/* Full-bleed immersive architectural photography background */}
-      <Image
-        src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2070&auto=format&fit=crop"
-        alt="Premium student living space"
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover object-center scale-105"
-      />
-      {/* Very subtle elegant gradient to ensure text readability on the edges, but preserving photo clarity */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
-
-      {/* Back button floats above the photo */}
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center selection:bg-primary/20 selection:text-primary p-4 sm:p-8">
+      
       <Link 
         href="/" 
-        className="absolute top-8 left-8 lg:top-12 lg:left-12 flex items-center text-sm font-medium text-white hover:text-white/80 transition-colors z-20 drop-shadow-md"
+        className="absolute top-8 left-8 flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors z-20"
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
-        Back to home
+        Back to search
       </Link>
 
-      {/* 
-        The Bento Card:
-        A crisp, completely opaque white card positioned asymmetrically (slightly right-aligned on large screens).
-        No blur, no glassmorphism - solid honesty and high contrast.
-      */}
-      <div className="relative z-10 w-full max-w-md mx-4 lg:mx-0 lg:absolute lg:right-[10%] lg:top-1/2 lg:-translate-y-1/2 bg-white rounded-3xl p-8 lg:p-12 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)]">
+      <div className="w-full max-w-5xl bg-card border border-border rounded-[2rem] overflow-hidden flex flex-col md:flex-row shadow-2xl relative z-10">
         
-        <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-3 font-display">
-          Welcome home.
-        </h1>
-        <p className="text-muted-foreground mb-10 text-lg">
-          Enter your details to access your saved rooms and premium student stays.
-        </p>
-
-        <form onSubmit={handleLogin} className="space-y-8">
-          <div className="space-y-2 relative group">
-            <label className="text-xs font-bold tracking-widest uppercase text-muted-foreground group-focus-within:text-primary transition-colors">
-              Full Name
-            </label>
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Abhinav Singh"
-              className="w-full bg-transparent border-b-2 border-border py-2 px-0 text-lg text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary focus:ring-0 transition-all font-medium"
-            />
+        {/* Left: Cinematic Form Area */}
+        <div className="flex-1 p-10 md:p-16 flex flex-col justify-center relative">
+          <div className="mb-12">
+            <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
+              Step Inside.
+            </h1>
+            <p className="text-muted-foreground text-lg max-w-xs">
+              Access your saved properties, track inquiries, and manage your stay preferences.
+            </p>
           </div>
 
-          <div className="space-y-2 relative group">
-            <label className="text-xs font-bold tracking-widest uppercase text-muted-foreground group-focus-within:text-primary transition-colors">
-              Mobile Number
-            </label>
-            <div className="relative flex items-center border-b-2 border-border focus-within:border-primary transition-all">
-              <span className="text-lg text-foreground font-medium py-2 pr-3 select-none">+91</span>
+          <form onSubmit={handleLogin} className="space-y-8 max-w-sm">
+            {error && (
+              <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-lg border border-destructive/20 font-medium">
+                {error}
+              </div>
+            )}
+            
+            <div className="space-y-2 relative group">
+              <label className="text-xs font-bold tracking-[0.2em] uppercase text-muted-foreground group-focus-within:text-primary transition-colors">
+                Full Name
+              </label>
               <input
-                type="tel"
+                type="text"
                 required
-                value={mobile}
-                onChange={(e) => {
-                  const val = e.target.value.replace(/\D/g, "");
-                  if (val.length <= 10) {
-                    setMobile(val);
-                  }
-                }}
-                placeholder="98765 43210"
-                className="w-full bg-transparent py-2 px-0 text-lg font-medium text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:ring-0"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Aryan Sharma"
+                className="w-full bg-transparent border-b-2 border-border py-3 text-xl text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary focus:ring-0 transition-colors font-medium"
               />
             </div>
-          </div>
 
-          <div className="pt-6">
+            <div className="space-y-2 relative group">
+              <label className="text-xs font-bold tracking-[0.2em] uppercase text-muted-foreground group-focus-within:text-primary transition-colors">
+                Mobile Number
+              </label>
+              <div className="flex items-center border-b-2 border-border focus-within:border-primary transition-colors">
+                <span className="text-xl text-foreground py-3 pr-3 select-none font-medium">+91</span>
+                <input
+                  type="tel"
+                  required
+                  value={mobile}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "");
+                    if (val.length <= 10) setMobile(val);
+                  }}
+                  placeholder="98765 43210"
+                  className="w-full bg-transparent py-3 text-xl text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:ring-0 font-medium"
+                />
+              </div>
+            </div>
+
             <button
               type="submit"
-              className="w-full bg-primary text-primary-foreground py-4 rounded-xl text-lg font-medium hover:bg-primary/90 transition-colors shadow-sm flex justify-center items-center gap-2"
+              className="mt-8 flex items-center justify-between w-full bg-primary text-primary-foreground px-6 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all hover:pr-4 group shadow-md"
             >
-              Continue
+              Continue to Portal
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
-          </div>
-        </form>
+          </form>
 
-        <div className="mt-8 text-center text-sm text-muted-foreground">
-          By continuing, you agree to our <br className="hidden lg:block"/> 
-          <Link href="#" className="underline hover:text-foreground underline-offset-4 decoration-border hover:decoration-primary transition-colors">Terms of Service</Link> 
-          {" "}and{" "}
-          <Link href="#" className="underline hover:text-foreground underline-offset-4 decoration-border hover:decoration-primary transition-colors">Privacy Policy</Link>.
+          {/* Decorative accents */}
+          <div className="absolute top-10 right-10 w-2 h-2 rounded-full bg-primary opacity-50" />
+          <div className="absolute bottom-10 right-20 w-1 h-1 rounded-full bg-muted-foreground opacity-20" />
         </div>
+
+        {/* Right: Massive Artistic Image */}
+        <div className="hidden md:block flex-1 relative bg-muted">
+          <div className="absolute inset-0 bg-gradient-to-r from-card to-transparent z-10 w-24" />
+          <Image
+            src="https://images.unsplash.com/photo-1554995207-c18c203602cb?q=80&w=2070&auto=format&fit=crop"
+            alt="Luxury modern interior"
+            fill
+            className="object-cover object-center"
+          />
+          <div className="absolute bottom-10 right-10 z-20 text-right bg-white/80 backdrop-blur-md px-6 py-4 rounded-2xl shadow-lg border border-white/20">
+            <p className="text-foreground font-display text-2xl font-bold">ApnaKamra</p>
+            <p className="text-primary text-sm uppercase tracking-widest font-bold mt-1">Premium Living</p>
+          </div>
+        </div>
+
       </div>
     </div>
   );

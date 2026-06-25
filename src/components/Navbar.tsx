@@ -34,7 +34,7 @@ export function Navbar() {
           <div className="flex items-center gap-4 border-l border-border pl-6">
             <UserProfile />
             <Link
-              href="/owner"
+              href="/owner/login"
               className="text-sm font-semibold bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors"
             >
               List your property
@@ -69,7 +69,7 @@ export function Navbar() {
             <UserProfile />
           </div>
           <Link
-            href="/owner"
+            href="/owner/login"
             onClick={() => setMobileOpen(false)}
             className="block w-full text-center text-sm font-semibold bg-primary text-primary-foreground px-5 py-3 rounded-lg hover:bg-primary/90 transition-colors mt-4"
           >

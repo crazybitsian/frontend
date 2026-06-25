@@ -4,19 +4,19 @@ import { Share2, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface StayControlsProps {
-  propertyId: number;
+  propertySlug: string;
   propertyName: string;
 }
 
-export function StayControls({ propertyId, propertyName }: StayControlsProps) {
+export function StayControls({ propertySlug, propertyName }: StayControlsProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
     const wishlist = JSON.parse(localStorage.getItem("apnakamra_wishlist") || "[]");
-    setIsLiked(wishlist.includes(propertyId));
-  }, [propertyId]);
+    setIsLiked(wishlist.includes(propertySlug));
+  }, [propertySlug]);
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -40,9 +40,9 @@ export function StayControls({ propertyId, propertyName }: StayControlsProps) {
     let wishlist = JSON.parse(localStorage.getItem("apnakamra_wishlist") || "[]");
     
     if (isLiked) {
-      wishlist = wishlist.filter((id: number) => id !== propertyId);
+      wishlist = wishlist.filter((slug: string) => slug !== propertySlug);
     } else {
-      wishlist.push(propertyId);
+      wishlist.push(propertySlug);
     }
     
     localStorage.setItem("apnakamra_wishlist", JSON.stringify(wishlist));

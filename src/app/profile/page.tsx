@@ -3,245 +3,356 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { 
-  ArrowLeft, User, LogOut, Heart, ShieldCheck, 
-  LayoutDashboard, MessageSquare, Settings, Calendar,
-  Building2, MapPin, ChevronRight
+  ArrowLeft, LogOut, Heart, MapPin, Building2, 
+  Settings, Clock, IndianRupee, BedDouble, 
+  ChevronRight, BadgeCheck
 } from "lucide-react";
 import Link from "next/link";
-import { StayCard } from "@/components/StayCard";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
-
-interface StayData {
-  id: number;
-  slug: string;
-  name: string;
-  location: string;
-  price: number;
-  sharing_type: string;
-  gender_allowed: string;
-  food_included: boolean;
-  ac_available: boolean;
-  verified: boolean;
-  photos: string[];
-}
-
-type TabType = "overview" | "inquiries" | "wishlist" | "preferences";
+import { api } from "@/lib/api/client";
+import { StayCard } from "@/components/StayCard";
+import { Property } from "@/lib/api/types";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [userData, setUserData] = useState<{ name: string; mobile: string } | null>(null);
-  const [wishlist, setWishlist] = useState<StayData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<TabType>("overview");
+  const [userName, setUserName] = useState("Student");
+  const [userMobile, setUserMobile] = useState("");
+  const [activeTab, setActiveTab] = useState("overview");
+
+  const [wishlistSlugs, setWishlistSlugs] = useState<string[]>([]);
+  const [wishlistProperties, setWishlistProperties] = useState<Property[]>([]);
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
+  const [inquiries, setInquiries] = useState<any[]>([]);
+  const [recentlyViewed, setRecentlyViewed] = useState<Property[]>([]);
+  const [preferences, setPreferences] = useState<any>(null);
 
   useEffect(() => {
-    // 1. Check Login
-    const storedUser = localStorage.getItem("apnakamra_user");
-    if (!storedUser) {
+    const mobile = localStorage.getItem("apnakamra_user");
+    if (!mobile) {
       router.push("/login");
       return;
     }
-    setUserData(JSON.parse(storedUser));
+    setUserMobile(mobile);
+    const name = localStorage.getItem("apnakamra_user_name");
+    if (name) setUserName(name);
 
-    // 2. Fetch Wishlist Properties
     const loadWishlist = async () => {
-      try {
-        const storedWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
-        if (storedWishlist.length === 0) {
-          setIsLoading(false);
-          return;
+      const storedItems = JSON.parse(localStorage.getItem("apnakamra_wishlist") || "[]");
+      
+      // Migrate old data: filter out any numeric IDs that were stored previously
+      const validSlugs = storedItems.filter((item: any) => typeof item === 'string' && Number.isNaN(Number(item)));
+      
+      if (validSlugs.length !== storedItems.length) {
+        localStorage.setItem("apnakamra_wishlist", JSON.stringify(validSlugs));
+      }
+      
+      setWishlistSlugs(validSlugs);
+      
+      if (validSlugs.length > 0) {
+        setIsWishlistLoading(true);
+        try {
+          const props = await Promise.all(
+            validSlugs.map((slug: string) => 
+              api.getProperty(slug).catch((e) => {
+                console.warn(`Failed to fetch property ${slug}:`, e);
+                return null;
+              })
+            )
+          );
+          setWishlistProperties(props.filter(Boolean));
+        } catch(e) {
+          console.error(e);
         }
-
-        const res = await fetch("https://apna-kamra.up.railway.app/api/properties");
-        if (!res.ok) throw new Error("Failed to load properties");
-        
-        const data = await res.json();
-        const likedProperties = data.filter((p: StayData) => storedWishlist.includes(p.id));
-        setWishlist(likedProperties);
-      } catch (error) {
-        console.error("Error loading wishlist:", error);
-      } finally {
-        setIsLoading(false);
+        setIsWishlistLoading(false);
+      } else {
+        setWishlistProperties([]);
       }
     };
-
     loadWishlist();
+
+    const storedInquiries = JSON.parse(localStorage.getItem("apnakamra_inquiries") || "[]");
+    setInquiries(storedInquiries);
+
+    const loadRecentlyViewed = async () => {
+      const storedRV = JSON.parse(localStorage.getItem("apnakamra_recently_viewed") || "[]");
+      if (storedRV.length > 0) {
+        try {
+          const props = await Promise.all(
+            storedRV.map((slug: string) => 
+              api.getProperty(slug).catch(() => null)
+            )
+          );
+          setRecentlyViewed(props.filter(Boolean));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    loadRecentlyViewed();
+
+    const storedPrefs = JSON.parse(localStorage.getItem("apnakamra_preferences") || "null");
+    setPreferences(storedPrefs);
+
+    const handleWishlistUpdate = () => {
+      loadWishlist();
+    };
+    window.addEventListener("wishlistUpdated", handleWishlistUpdate);
+    return () => window.removeEventListener("wishlistUpdated", handleWishlistUpdate);
   }, [router]);
+
+  const handleSaveToggle = (slug: string) => {
+    let newWishlist = [...wishlistSlugs];
+    if (newWishlist.includes(slug)) {
+      newWishlist = newWishlist.filter(s => s !== slug);
+    } else {
+      newWishlist.push(slug);
+    }
+    setWishlistSlugs(newWishlist);
+    localStorage.setItem("apnakamra_wishlist", JSON.stringify(newWishlist));
+    window.dispatchEvent(new Event("wishlistUpdated"));
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("apnakamra_user");
+    localStorage.removeItem("apnakamra_user_name");
     router.push("/");
-    router.refresh();
   };
 
-  if (!userData) return null; // Wait for redirect
-
-  const tabs = [
-    { id: "overview", label: "Overview", icon: LayoutDashboard },
-    { id: "wishlist", label: "Wishlist", icon: Heart },
-    { id: "inquiries", label: "Inquiries", icon: MessageSquare },
-    { id: "preferences", label: "Preferences", icon: Settings },
-  ] as const;
-
   return (
-    <div className="min-h-screen bg-[#F4F4F5] pb-24">
-      {/* SaaS-Style Compact Header */}
-      <div className="bg-white border-b border-border sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary">
+      
+      {/* Compact Header */}
+      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
+        <div className="container mx-auto max-w-6xl px-4 md:px-8 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-6">
             <Link 
-              href="/" 
-              className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              href="/"
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-all shadow-sm hover:shadow-md"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to home
+              <ArrowLeft className="w-5 h-5" />
             </Link>
-            <button
-              onClick={handleLogout}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              Log Out
-            </button>
-          </div>
-
-          <div className="flex flex-col md:flex-row md:items-center gap-6 pb-6 pt-2">
-            <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20 shrink-0">
-              <User className="w-8 h-8 text-primary" />
-            </div>
-            <div className="flex-1">
-              <div className="flex flex-wrap items-center gap-3 mb-1">
-                <h1 className="text-2xl font-bold font-display text-foreground">
-                  {userData.name}
-                </h1>
-                <span className="inline-flex items-center gap-1 bg-primary/10 text-primary px-2.5 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wider">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  Verified
+            <div>
+              <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">
+                {userName}'s Portal
+              </h1>
+              <p className="text-muted-foreground text-sm flex items-center gap-2">
+                +91 {userMobile} 
+                <span className="w-1 h-1 rounded-full bg-border" />
+                <span className="text-primary flex items-center gap-1 font-medium">
+                  <BadgeCheck className="w-3.5 h-3.5" /> Verified
                 </span>
-              </div>
-              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1.5">
-                  <User className="w-4 h-4" />
-                  +91 {userData.mobile}
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4" />
-                  Joined Sep 2023
-                </span>
-              </div>
+              </p>
             </div>
           </div>
-
-          {/* Tab Navigation */}
-          <div className="flex items-center gap-8 overflow-x-auto no-scrollbar border-t border-border pt-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as TabType)}
-                  className={cn(
-                    "flex items-center gap-2 py-4 text-sm font-medium transition-colors relative whitespace-nowrap",
-                    isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
-                  {isActive && (
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-t-full" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
+          <button 
+            onClick={handleLogout}
+            className="hidden md:flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10 px-4 py-2 rounded-lg transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </button>
         </div>
-      </div>
+
+        {/* Tab Navigation */}
+        <div className="container mx-auto max-w-6xl px-4 md:px-8 flex items-center gap-8 overflow-x-auto no-scrollbar border-t border-border/50 pt-2">
+          {["Overview", "Wishlist", "Inquiries", "Preferences"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab.toLowerCase())}
+              className={cn(
+                "pb-4 text-sm font-semibold tracking-wide uppercase transition-all whitespace-nowrap border-b-2 relative",
+                activeTab === tab.toLowerCase()
+                  ? "text-primary border-primary"
+                  : "text-muted-foreground border-transparent hover:text-foreground"
+              )}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+      </header>
 
       {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 mt-8">
+      <main className="container mx-auto max-w-6xl px-4 md:px-8 py-10">
         
-        {/* OVERVIEW TAB */}
         {activeTab === "overview" && (
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold font-display text-foreground">Dashboard Overview</h2>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             
-            {/* Bento Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-2xl border border-border shadow-sm flex flex-col justify-between">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <Heart className="w-5 h-5 text-primary" />
+            {/* Left Column (Stats & Quick Actions) */}
+            <div className="md:col-span-4 flex flex-col gap-6">
+              {/* Profile Card */}
+              <div className="bg-card border border-border rounded-3xl p-8 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-transparent opacity-50" />
+                <div className="w-16 h-16 rounded-full bg-background border border-border flex items-center justify-center mb-6 shadow-sm">
+                  <span className="font-display text-2xl font-bold text-primary">
+                    {userName.charAt(0).toUpperCase()}
+                  </span>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground mb-1">Saved Properties</p>
-                  <p className="text-3xl font-bold font-display">{wishlist.length}</p>
+                <h2 className="font-display text-2xl font-bold mb-1">{userName}</h2>
+                <p className="text-muted-foreground mb-6">Member since Jun 2026</p>
+                
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center py-3 border-b border-border">
+                    <span className="text-muted-foreground text-sm font-medium">Saved Properties</span>
+                    <span className="font-bold font-display text-xl text-foreground">{wishlistSlugs.length}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-3 border-b border-border">
+                    <span className="text-muted-foreground text-sm font-medium">Active Inquiries</span>
+                    <span className="font-bold font-display text-xl text-foreground">{inquiries.length}</span>
+                  </div>
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-2xl border border-border shadow-sm flex flex-col justify-between">
-                <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4">
-                  <MessageSquare className="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground mb-1">Active Inquiries</p>
-                  <p className="text-3xl font-bold font-display">0</p>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-2xl border border-border shadow-sm flex flex-col justify-between">
-                <div className="w-10 h-10 bg-amber-500/10 rounded-lg flex items-center justify-center mb-4">
-                  <Building2 className="w-5 h-5 text-amber-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground mb-1">Tours Scheduled</p>
-                  <p className="text-3xl font-bold font-display">0</p>
-                </div>
+
+              {/* Preferences Quick Card */}
+              <div className="bg-card border border-border rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="font-display font-bold text-lg mb-4 text-foreground flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-primary" /> Current Search
+                </h3>
+                {preferences ? (
+                  <div className="flex flex-wrap gap-2">
+                    {preferences.budget && <span className="bg-muted text-muted-foreground font-medium text-xs px-3 py-1.5 rounded-full border border-border/50">Budget: <span className="text-foreground font-semibold">{preferences.budget}</span></span>}
+                    {preferences.city && <span className="bg-muted text-muted-foreground font-medium text-xs px-3 py-1.5 rounded-full border border-border/50">City: <span className="text-foreground font-semibold">{preferences.city}</span></span>}
+                    {preferences.type && <span className="bg-muted text-muted-foreground font-medium text-xs px-3 py-1.5 rounded-full border border-border/50">Type: <span className="text-foreground font-semibold">{preferences.type}</span></span>}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground mb-4">No active preferences set.</p>
+                )}
+                <button 
+                  onClick={() => setActiveTab("preferences")}
+                  className="mt-6 w-full py-3 bg-muted hover:bg-border border border-border text-foreground text-sm font-semibold rounded-xl transition-colors"
+                >
+                  Edit Preferences
+                </button>
               </div>
             </div>
 
-            {/* Recent Activity Mock */}
-            <div className="bg-white rounded-2xl border border-border shadow-sm p-6 mt-8">
-              <h3 className="text-lg font-semibold font-display mb-6">Recent Activity</h3>
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">Your recent activity will appear here once you start contacting properties.</p>
-                <button onClick={() => setActiveTab("wishlist")} className="mt-4 text-primary font-medium hover:underline">
-                  View your wishlist
-                </button>
-              </div>
+            {/* Right Column (Recent Activity) */}
+            <div className="md:col-span-8 flex flex-col gap-6">
+              
+              {/* Active Inquiry Hero Card */}
+              {inquiries.length > 0 ? (
+                <div className="bg-card border border-border rounded-3xl p-2 sm:p-2 shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row gap-6 relative overflow-hidden group">
+                  <div className="relative w-full sm:w-64 h-48 sm:h-full rounded-2xl overflow-hidden shrink-0 bg-muted">
+                    <Image
+                      src={inquiries[0].image || "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2070&auto=format&fit=crop"}
+                      alt="Premium Room"
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full border border-border shadow-sm">
+                      <span className="text-[10px] font-bold tracking-widest uppercase text-primary flex items-center gap-1.5">
+                        <Clock className="w-3 h-3" /> Awaiting Response
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex-1 py-6 pr-6 pl-4 sm:pl-0 flex flex-col">
+                    <h3 className="font-display font-bold text-2xl text-foreground mb-2 leading-tight line-clamp-2">
+                      {inquiries[0].name}
+                    </h3>
+                    <p className="text-muted-foreground flex items-center gap-1.5 text-sm mb-6 font-medium">
+                      <MapPin className="w-4 h-4 text-primary/70" /> {inquiries[0].locality || "Location"}, {inquiries[0].city}
+                    </p>
+                    
+                    <div className="mt-auto grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-1">Inquiry Date</p>
+                        <p className="font-semibold text-foreground">{new Date(inquiries[0].date).toLocaleDateString("en-IN", { day: 'numeric', month: 'short', year: 'numeric'})}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-1">Monthly Rent</p>
+                        <p className="font-bold text-foreground flex items-center">
+                          <IndianRupee className="w-4 h-4 mr-0.5 text-primary" /> {inquiries[0].rent ? Number(inquiries[0].rent).toLocaleString("en-IN") : "TBD"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-card border border-border rounded-3xl p-8 shadow-sm text-center flex flex-col items-center justify-center">
+                   <Clock className="w-10 h-10 text-muted-foreground/30 mb-4" />
+                   <p className="font-display font-bold text-lg text-foreground">No active inquiries</p>
+                   <p className="text-muted-foreground text-sm">When you contact an owner, it will appear here.</p>
+                </div>
+              )}
+
+              {/* Recently Viewed Grid */}
+              {recentlyViewed.length > 0 && (
+                <div className="bg-card border border-border rounded-3xl p-8 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-display font-bold text-xl text-foreground">Recently Viewed</h3>
+                    <button 
+                      onClick={() => setActiveTab("wishlist")}
+                      className="text-primary text-sm font-semibold hover:underline flex items-center"
+                    >
+                      View Wishlist <ChevronRight className="w-4 h-4 ml-1" />
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {recentlyViewed.map((prop) => (
+                      <Link href={`/${prop.city_slug || 'city'}/${prop.slug}`} key={prop.slug} className="flex gap-4 p-4 rounded-2xl bg-background border border-border hover:border-primary/50 transition-colors shadow-sm cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                        <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-muted">
+                          <Image
+                            src={prop.images?.[0] || "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=2000&auto=format&fit=crop"}
+                            alt="Room preview"
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                        </div>
+                        <div className="flex flex-col justify-center">
+                          <h4 className="font-display font-bold text-foreground line-clamp-1 mb-1">
+                            {prop.name}
+                          </h4>
+                          <p className="text-muted-foreground font-medium text-xs mb-2 flex items-center gap-1 line-clamp-1">
+                            <MapPin className="w-3 h-3 text-primary/70 shrink-0" /> {prop.locality || "Location"}
+                          </p>
+                          <p className="font-bold text-primary text-sm flex items-center">
+                            <IndianRupee className="w-3.5 h-3.5 mr-0.5" />
+                            {prop.lowest_price ? `${Number(prop.lowest_price).toLocaleString("en-IN")} / mo` : 'TBD'}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
             </div>
           </div>
         )}
 
-        {/* WISHLIST TAB */}
+        {/* Dummy Tabs to complete the illusion */}
         {activeTab === "wishlist" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold font-display text-foreground">Your Saved Properties</h2>
-              <span className="bg-white border border-border text-foreground px-3 py-1 rounded-full text-sm font-medium shadow-sm">
-                {wishlist.length} saved
-              </span>
-            </div>
-
-            {isLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="animate-pulse bg-muted rounded-2xl h-[400px]" />
+            <h2 className="font-display text-3xl font-bold text-foreground mb-6">Your Wishlist</h2>
+            {isWishlistLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {[1,2,3].map(i => (
+                  <div key={i} className="animate-pulse bg-card border border-border rounded-[14px] h-[300px]" />
                 ))}
               </div>
-            ) : wishlist.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {wishlist.map((stay) => (
-                  <StayCard key={stay.id} stay={stay} />
+            ) : wishlistProperties.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {wishlistProperties.map((property) => (
+                  <Link href={`/${property.city_slug || 'city'}/${property.slug}`} key={property.slug} className="block outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-[14px]">
+                    <StayCard 
+                      property={property} 
+                      isSaved={wishlistSlugs.includes(property.slug)} 
+                      onSaveToggle={handleSaveToggle} 
+                    />
+                  </Link>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-24 bg-white rounded-2xl border border-border shadow-sm">
-                <Heart className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-foreground mb-2 font-display">No properties saved yet</h3>
-                <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-                  Heart properties you like while browsing to save them here for later.
+              <div className="bg-card border border-border rounded-3xl p-16 text-center shadow-sm">
+                <Heart className="w-16 h-16 text-muted-foreground/30 mx-auto mb-6" />
+                <p className="text-muted-foreground max-w-md mx-auto mb-8">
+                  Properties you've saved will appear here. Build your collection of premium stays.
                 </p>
                 <Link 
                   href="/"
-                  className="inline-flex items-center justify-center bg-primary text-primary-foreground px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors shadow-sm"
+                  className="inline-flex items-center justify-center bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-sm"
                 >
                   Explore Properties
                 </Link>
@@ -250,89 +361,39 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {/* INQUIRIES TAB */}
         {activeTab === "inquiries" && (
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold font-display text-foreground">Recent Inquiries</h2>
-            
-            <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
-              <div className="p-12 text-center">
-                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
-                  <MessageSquare className="w-8 h-8 text-muted-foreground/50" />
-                </div>
-                <h3 className="text-xl font-semibold text-foreground mb-2 font-display">No inquiries sent yet</h3>
-                <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
-                  When you contact a property owner or schedule a tour, it will show up here so you can keep track of your conversations.
-                </p>
-                <Link 
-                  href="/"
-                  className="inline-flex items-center justify-center bg-white border border-border text-foreground px-6 py-3 rounded-lg font-medium hover:bg-muted transition-colors shadow-sm"
-                >
-                  Find a property to contact
-                </Link>
-              </div>
-            </div>
+          <div className="bg-card border border-border rounded-3xl p-16 text-center shadow-sm">
+            <Building2 className="w-16 h-16 text-muted-foreground/30 mx-auto mb-6" />
+            <h2 className="font-display text-3xl font-bold text-foreground mb-4">Past Inquiries</h2>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              Track the status of properties you have contacted. (API integration pending).
+            </p>
           </div>
         )}
 
-        {/* PREFERENCES TAB */}
         {activeTab === "preferences" && (
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold font-display text-foreground">Search Preferences</h2>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Budget Pref */}
-              <div className="bg-white p-6 md:p-8 rounded-2xl border border-border shadow-sm">
-                <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">₹</span>
-                  Budget Range
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between text-sm text-muted-foreground mb-2">
-                    <span>₹5,000</span>
-                    <span>₹30,000+</span>
-                  </div>
-                  <input type="range" className="w-full accent-primary" min="5000" max="30000" defaultValue="15000" />
-                  <p className="text-center font-medium text-lg mt-4">Up to ₹15,000 / month</p>
-                </div>
-              </div>
-
-              {/* City Pref */}
-              <div className="bg-white p-6 md:p-8 rounded-2xl border border-border shadow-sm">
-                <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  Preferred Cities
-                </h3>
-                <div className="flex flex-wrap gap-3">
-                  {["Delhi & NCR", "Bangalore", "Mumbai", "Kota", "Jaipur", "Hyderabad"].map((city, i) => (
-                    <button 
-                      key={city}
-                      className={cn(
-                        "px-4 py-2 rounded-lg border text-sm font-medium transition-colors",
-                        i === 0 || i === 1 
-                          ? "bg-primary/5 border-primary text-primary" 
-                          : "bg-white border-border text-muted-foreground hover:border-muted-foreground"
-                      )}
-                    >
-                      {city}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-            
-            <div className="flex justify-end mt-6">
-              <button className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors shadow-sm">
-                Save Preferences
-              </button>
-            </div>
+          <div className="bg-card border border-border rounded-3xl p-16 text-center shadow-sm">
+            <Settings className="w-16 h-16 text-muted-foreground/30 mx-auto mb-6" />
+            <h2 className="font-display text-3xl font-bold text-foreground mb-4">Personal Preferences</h2>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              Set your default budget, sharing preferences, and dietary requirements to get personalized recommendations.
+            </p>
           </div>
         )}
 
+      </main>
+      
+      {/* Mobile Logout */}
+      <div className="md:hidden px-4 pb-10">
+        <button 
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 py-4 bg-card border border-border rounded-xl text-foreground font-bold hover:bg-muted transition-colors shadow-sm"
+        >
+          <LogOut className="w-5 h-5" />
+          Sign Out
+        </button>
       </div>
+
     </div>
   );
 }

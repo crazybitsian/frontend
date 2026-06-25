@@ -36,7 +36,29 @@ export function CityListingClient({ citySlug, cityName, initialCount, initialPro
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [sort, setSort] = useState("newest");
+  const [wishlist, setWishlist] = useState<string[]>([]);
   const debouncedQuery = useDebounce(searchQuery, 400);
+
+  React.useEffect(() => {
+    const updateWishlist = () => {
+      setWishlist(JSON.parse(localStorage.getItem("apnakamra_wishlist") || "[]"));
+    };
+    updateWishlist();
+    window.addEventListener("wishlistUpdated", updateWishlist);
+    return () => window.removeEventListener("wishlistUpdated", updateWishlist);
+  }, []);
+
+  const handleSaveToggle = (slug: string) => {
+    let newWishlist = [...wishlist];
+    if (newWishlist.includes(slug)) {
+      newWishlist = newWishlist.filter(s => s !== slug);
+    } else {
+      newWishlist.push(slug);
+    }
+    setWishlist(newWishlist);
+    localStorage.setItem("apnakamra_wishlist", JSON.stringify(newWishlist));
+    window.dispatchEvent(new Event("wishlistUpdated"));
+  };
 
   const toggleFilter = (filterId: string) => {
     if (filterId === "all") {
@@ -198,7 +220,12 @@ export function CityListingClient({ citySlug, cityName, initialCount, initialPro
                 key={property.id || property.slug}
                 className="block outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-[14px]"
               >
-                <StayCard property={property} priorityImage={index < 4} />
+                <StayCard 
+                  property={property} 
+                  priorityImage={index < 4} 
+                  isSaved={wishlist.includes(property.slug)}
+                  onSaveToggle={handleSaveToggle}
+                />
               </Link>
             ))}
           </div>

@@ -15,7 +15,35 @@ export default async function Home() {
   let featuredProperties: Property[] = [];
 
   try {
-    cities = await api.getCities();
+    let fetchedCities = await api.getCities();
+    
+    // Fix capitalizations and override specific images for maximum aesthetic quality
+    fetchedCities = fetchedCities.map(city => {
+      if (city.slug === "delhi-ncr") return { 
+        ...city, 
+        name: "Delhi NCR", 
+        image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=1200&auto=format&fit=crop" // Premium Skyline
+      };
+      if (city.slug === "hyderabad") return { 
+        ...city, 
+        name: "Hyderabad", 
+        image: "https://upload.wikimedia.org/wikipedia/commons/c/ca/Durgam_Cheruvu_Panorama_V2.jpg" // Authentic premium Hyderabad image
+      };
+      if (city.slug === "kota") return { ...city, name: "Kota" };
+      return city;
+    });
+
+    // Swap Bangalore and Kota
+    const bIndex = fetchedCities.findIndex(c => c.slug === "bangalore");
+    const kIndex = fetchedCities.findIndex(c => c.slug === "kota");
+    
+    if (bIndex !== -1 && kIndex !== -1) {
+      const temp = fetchedCities[bIndex];
+      fetchedCities[bIndex] = fetchedCities[kIndex];
+      fetchedCities[kIndex] = temp;
+    }
+    
+    cities = fetchedCities;
   } catch (error) {
     console.error("Failed to fetch cities:", error);
   }
@@ -126,11 +154,8 @@ export default async function Home() {
           <p className="text-primary-foreground/70 text-base sm:text-lg mb-8 max-w-lg mx-auto">
             Reach thousands of students looking for a room in your city.
           </p>
-          <Link
-            href="/owner"
-            className="inline-flex items-center bg-white text-foreground font-semibold px-8 py-3.5 rounded-xl hover:bg-white/90 transition-colors text-base"
-          >
-            Get started
+          <Link href="/owner/login" className="inline-flex items-center justify-center bg-white text-foreground px-8 py-3 rounded-lg font-medium hover:bg-muted transition-colors shadow-sm">
+            List your property
           </Link>
         </div>
       </section>

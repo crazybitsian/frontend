@@ -1,0 +1,65 @@
+"use client";
+
+import { PhoneCall } from "lucide-react";
+import { Property } from "@/lib/api/types";
+import { cn } from "@/lib/utils";
+
+interface ContactOwnerButtonProps {
+  property: Property;
+  className?: string;
+  variant?: "icon" | "full";
+}
+
+export function ContactOwnerButton({ property, className, variant = "full" }: ContactOwnerButtonProps) {
+  const handleContact = () => {
+    if (!property.owner_mobile) {
+      alert("Owner contact not available");
+      return;
+    }
+
+    try {
+      // Record inquiry
+      const stored = JSON.parse(localStorage.getItem("apnakamra_inquiries") || "[]");
+      // filter out if already inquired for this property, keep others
+      let inquiries = stored.filter((inquiry: any) => inquiry.slug !== property.slug);
+      
+      inquiries.unshift({
+        slug: property.slug,
+        date: new Date().toISOString(),
+        rent: property.lowest_price || 0,
+        name: property.name,
+        locality: property.locality,
+        city: property.city_slug,
+        image: property.images?.[0]
+      });
+
+      localStorage.setItem("apnakamra_inquiries", JSON.stringify(inquiries));
+    } catch (e) {
+      console.error(e);
+    }
+
+    window.location.href = `tel:${property.owner_mobile}`;
+  };
+
+  if (variant === "icon") {
+    return (
+      <button 
+        onClick={handleContact}
+        className={cn("bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-xl transition-colors flex items-center gap-2 text-sm", className)}
+      >
+        <PhoneCall className="h-4 w-4" />
+        Contact owner
+      </button>
+    );
+  }
+
+  return (
+    <button 
+      onClick={handleContact}
+      className={cn("w-full bg-primary text-primary-foreground px-8 py-4 rounded-lg font-bold flex items-center justify-center gap-3 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20", className)}
+    >
+      <PhoneCall className="w-5 h-5" />
+      Contact owner
+    </button>
+  );
+}

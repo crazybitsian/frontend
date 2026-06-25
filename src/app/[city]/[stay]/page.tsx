@@ -11,6 +11,8 @@ import { Footer } from "@/components/Footer";
 import { notFound } from "next/navigation";
 import { StayGallery } from "@/components/StayGallery";
 import { StayControls } from "@/components/StayControls";
+import { ContactOwnerButton } from "@/components/ContactOwnerButton";
+import { RecentlyViewedTracker } from "@/components/RecentlyViewedTracker";
 
 export const revalidate = 3600;
 
@@ -86,9 +88,11 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <div className="flex gap-2">
-              <StayControls propertyId={property.id} propertyName={property.name} />
+              <StayControls propertySlug={property.slug} propertyName={property.name} />
             </div>
           </header>
+
+          <RecentlyViewedTracker propertySlug={property.slug} />
 
           {/* Premium Inset Photo Gallery */}
           <section className="mb-8">
@@ -161,10 +165,7 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
                   
                   {/* Right: Action Button */}
                   <div className="w-full md:w-auto shrink-0">
-                    <button className="w-full bg-primary text-primary-foreground px-8 py-4 rounded-lg font-bold flex items-center justify-center gap-3 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20">
-                      <PhoneCall className="w-5 h-5" />
-                      Contact owner
-                    </button>
+                    <ContactOwnerButton property={property} />
                   </div>
                 </div>
               </div>
@@ -280,10 +281,7 @@ export default async function StayDetailPage({ params }: { params: Promise<{ cit
               <p className="text-xs text-muted-foreground">{sharingOptions[0].label}</p>
             )}
           </div>
-          <button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-xl transition-colors flex items-center gap-2 text-sm">
-            <PhoneCall className="h-4 w-4" />
-            Contact owner
-          </button>
+          <ContactOwnerButton property={property} variant="icon" />
         </div>
       </div>
 

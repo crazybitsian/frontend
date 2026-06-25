@@ -16,15 +16,11 @@ export function UserProfile({ variant = "default" }: UserProfileProps) {
 
   useEffect(() => {
     setMounted(true);
-    const userStr = localStorage.getItem("apnakamra_user");
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        setIsLoggedIn(true);
-        setUserName(user.name);
-      } catch (e) {
-        // ignore
-      }
+    const mobile = localStorage.getItem("apnakamra_user");
+    if (mobile) {
+      setIsLoggedIn(true);
+      const name = localStorage.getItem("apnakamra_user_name");
+      setUserName(name || "Student");
     }
   }, []);
 

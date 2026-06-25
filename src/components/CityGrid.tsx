@@ -10,7 +10,7 @@ const CITY_IMAGES: Record<string, string> = {
   mumbai: "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?q=80&w=800&auto=format&fit=crop",
   kota: "https://images.unsplash.com/photo-1622308644420-b00eb0ae0f70?q=80&w=800&auto=format&fit=crop", // High quality Kota image
   jaipur: "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=800&auto=format&fit=crop",
-  hyderabad: "https://images.unsplash.com/photo-1572883454114-efaa1da1e897?q=80&w=800&auto=format&fit=crop",
+  hyderabad: "https://images.unsplash.com/photo-1580227181515-fb19356f103b?q=80&w=800&auto=format&fit=crop",
   "delhi-ncr": "https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1200&auto=format&fit=crop", // Added Delhi NCR
 };
 
