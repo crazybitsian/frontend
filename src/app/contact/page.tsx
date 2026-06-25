@@ -33,7 +33,7 @@ export default function ContactPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <main className="flex-grow max-w-6xl mx-auto px-6 py-24 w-full">
+      <main className="grow max-w-6xl mx-auto px-6 py-24 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32 items-start">
           {/* Left Column: Branding & Info */}
           <div className="space-y-12">

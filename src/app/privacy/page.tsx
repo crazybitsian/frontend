@@ -42,7 +42,7 @@ export default function PrivacyPolicyPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background scroll-smooth">
-      <main className="flex-grow max-w-6xl mx-auto px-6 py-24 w-full">
+      <main className="grow max-w-6xl mx-auto px-6 py-24 w-full">
         {/* Page Header */}
         <header className="mb-16 border-b border-border pb-12">
           <h1 className="text-5xl md:text-6xl font-display font-bold tracking-tighter mb-4">Privacy Policy</h1>

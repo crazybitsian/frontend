@@ -31,7 +31,7 @@ export default function AboutUsPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <main className="flex-grow">
+      <main className="grow">
         {/* Hero Section */}
         <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
           <div className="absolute inset-0 w-full h-full">

@@ -2,20 +2,19 @@ import { City, Property, LeadPayload, EventPayload, ImpressionPayload } from "./
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://apna-kamra.up.railway.app/api";
 
-async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 2, delay = 500): Promise<Response> {
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
-      const res = await fetch(url, { ...options, signal: controller.signal });
-      clearTimeout(timeout);
-      return res;
-    } catch (e) {
-      if (attempt === retries) throw e;
-      await new Promise((r) => setTimeout(r, delay * attempt));
-    }
+async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 2, delay = 500, attempt = 1): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(timeout);
+    return res;
+  } catch (e) {
+    clearTimeout(timeout);
+    if (attempt >= retries) throw e;
+    await new Promise((r) => setTimeout(r, delay * attempt));
+    return fetchWithRetry(url, options, retries, delay, attempt + 1);
   }
-  throw new Error("Request failed");
 }
 
 async function apiGet<T>(path: string): Promise<T> {

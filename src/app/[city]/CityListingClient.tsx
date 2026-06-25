@@ -129,7 +129,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4 md:gap-8">
           
           {/* Left: Brand / Mobile Back Button */}
-          <div className="flex-shrink-0 flex items-center">
+          <div className="shrink-0 flex items-center">
             <Link href="/" className="md:hidden flex items-center justify-center h-10 w-10 rounded-full hover:bg-black/5 transition-colors mr-2">
               <ArrowLeft className="h-5 w-5 text-foreground" />
             </Link>
@@ -143,7 +143,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
             <div className="w-full flex items-center bg-white border border-border/80 rounded-full px-2 py-1.5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_4px_6px_-2px_rgba(0,0,0,0.05)] transition-shadow hover:shadow-md">
               {/* City Selector */}
               <Select value={citySlug} onValueChange={(val) => router.push(`/${val}`)}>
-                <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-muted focus:ring-0 rounded-full h-auto py-1 px-4 text-sm font-medium transition-colors cursor-pointer w-auto flex-shrink-0">
+                <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-muted focus:ring-0 rounded-full h-auto py-1 px-4 text-sm font-medium transition-colors cursor-pointer w-auto shrink-0">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-[20px] w-[20px] text-primary" />
                     <span className="font-medium text-sm">{formatCityName(cityName)}</span>
@@ -192,7 +192,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
               </Select>
 
               {/* Divider */}
-              <div className="w-[1px] h-6 bg-border mx-1 flex-shrink-0"></div>
+              <div className="w-[1px] h-6 bg-border mx-1 shrink-0"></div>
 
               {/* Input Area */}
               <div className="flex-1 px-4">
@@ -205,14 +205,14 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
               </div>
 
               {/* Search Button */}
-              <div className="bg-primary hover:bg-[#125633] text-white w-10 h-10 rounded-full flex items-center justify-center transition-all active:scale-95 flex-shrink-0 shadow-sm cursor-pointer">
+              <div className="bg-primary hover:bg-[#125633] text-white w-10 h-10 rounded-full flex items-center justify-center transition-all active:scale-95 shrink-0 shadow-sm cursor-pointer">
                 <Search className="h-[20px] w-[20px]" />
               </div>
             </div>
           </div>
 
           {/* Right: Filter & Sort Actions */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               suppressHydrationWarning
               onClick={() => setIsFilterModalOpen(true)}
@@ -247,7 +247,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
         <div className="sm:hidden px-4 pb-4">
           <div className="w-full flex items-center bg-white border border-border/80 rounded-full px-2 py-1.5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_4px_6px_-2px_rgba(0,0,0,0.05)] transition-shadow hover:shadow-md">
             <Select value={citySlug} onValueChange={(val) => router.push(`/${val}`)}>
-              <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-muted focus:ring-0 rounded-full h-auto py-1 px-3 text-sm font-medium transition-colors cursor-pointer w-auto flex-shrink-0">
+              <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-muted focus:ring-0 rounded-full h-auto py-1 px-3 text-sm font-medium transition-colors cursor-pointer w-auto shrink-0">
                 <MapPin className="h-4 w-4 text-primary" />
               </SelectTrigger>
               <SelectContent className="rounded-2xl shadow-xl border-border p-2 min-w-[200px]">
@@ -260,7 +260,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <div className="w-[1px] h-6 bg-border mx-1 flex-shrink-0"></div>
+            <div className="w-[1px] h-6 bg-border mx-1 shrink-0"></div>
             <div className="flex-1 px-2">
               <Input
                 value={searchQuery}
@@ -269,7 +269,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
                 className="w-full h-auto p-0 bg-transparent border-none focus-visible:ring-0 text-sm placeholder:text-muted-foreground shadow-none"
               />
             </div>
-            <div className="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm cursor-pointer">
+            <div className="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm cursor-pointer">
               <Search className="h-4 w-4" />
             </div>
           </div>

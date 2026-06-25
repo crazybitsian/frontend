@@ -42,7 +42,7 @@ export default function TermsOfServicePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background scroll-smooth">
-      <main className="flex-grow max-w-6xl mx-auto px-6 py-24 w-full">
+      <main className="grow max-w-6xl mx-auto px-6 py-24 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-16 items-start">
           
           {/* Left Column: Sticky Sidebar */}
