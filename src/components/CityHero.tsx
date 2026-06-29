@@ -25,6 +25,9 @@ const CITY_PILLS = [
   { label: "Hyderabad", slug: "hyderabad" },
 ];
 
+/**
+ * Calculates the Levenshtein distance between two strings to help with fuzzy searching and typo tolerance.
+ */
 function getEditDistance(a: string, b: string): number {
   if (a.length === 0) return b.length;
   if (b.length === 0) return a.length;
@@ -54,6 +57,9 @@ type SearchResult = {
   score: number;
 };
 
+/**
+ * Renders the hero section for a specific city page, including a dynamic search bar, background image, and localized title.
+ */
 export function CityHero({ cities }: CityHeroProps) {
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -64,17 +70,18 @@ export function CityHero({ cities }: CityHeroProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLFormElement>(null);
 
-  // Load properties silently in the background
-  useEffect(() => {
-    let mounted = true;
+  const [hasPrefetched, setHasPrefetched] = useState(false);
+
+  const handlePreFetch = () => {
+    if (hasPrefetched) return;
+    setHasPrefetched(true);
     api.getProperties().then((data) => {
-      if (mounted) setAllProperties(data);
-      return data;
+      setAllProperties(data);
     }).catch((err) => {
-      console.warn("Could not pre-fetch properties for search", err);
+      console.warn("Could not fetch properties for search", err);
+      setHasPrefetched(false);
     });
-    return () => { mounted = false; };
-  }, []);
+  };
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -182,6 +189,9 @@ export function CityHero({ cities }: CityHeroProps) {
 
     return () => clearTimeout(handler);
   }, [query, cities, allProperties]);
+/**
+ * Handles the search form submission, navigating the user to the appropriate search results page based on their query.
+ */
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -272,7 +282,11 @@ export function CityHero({ cities }: CityHeroProps) {
                 setQuery(e.target.value);
                 setShowDropdown(true);
               }}
-              onFocus={() => setShowDropdown(true)}
+              onFocus={() => {
+                handlePreFetch();
+                setShowDropdown(true);
+              }}
+              onMouseEnter={handlePreFetch}
               placeholder="Search for a city or property..."
               className="border-none bg-transparent h-14 sm:h-16 text-lg focus-visible:ring-0 shadow-none text-white placeholder:text-white/50 pl-13 pr-4 font-medium relative z-10"
               autoComplete="off"

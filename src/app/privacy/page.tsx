@@ -5,6 +5,9 @@ import { Footer } from "@/components/Footer";
 import { Mail, Download, ShieldCheck } from "lucide-react";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
 
+/**
+ * Renders the privacy policy page outlining data collection and usage practices.
+ */
 export default function PrivacyPolicyPage() {
   const { activeSection, scrollToSection } = useScrollSpy("collect");
 

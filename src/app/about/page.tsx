@@ -5,6 +5,9 @@ import { Footer } from "@/components/Footer";
 import { ShieldCheck, Sparkles, Building2 } from "lucide-react";
 import { useEffect } from "react";
 
+/**
+ * Renders the 'About Us' page containing information about the ApnaKamra mission and team.
+ */
 export default function AboutUsPage() {
   useEffect(() => {
     // Simple scroll reveal interaction

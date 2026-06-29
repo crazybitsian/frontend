@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api/client";
+import React, { useState } from "react";
 import { Property, City } from "@/lib/api/types";
 import { StayCard } from "@/components/StayCard";
 import { useRouter } from "next/navigation";
@@ -40,6 +38,9 @@ const formatCityName = (name: string) => {
 
 export function CityListingClient({ citySlug, cityName, cities = [], initialProperties }: CityListingClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  /**
+   * Client-side component that handles filtering, sorting, and interactive rendering of property listings for a city.
+   */
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [sort, setSort] = useState("newest");
   const [wishlist, setWishlist] = useState<string[]>([]);
@@ -81,44 +82,48 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
     });
   };
 
-  const getFilterParams = useCallback(() => {
-    let flag = "";
-    const amenitiesArr: string[] = [];
-    if (activeFilters.includes("verified")) flag = "trusted";
-    if (activeFilters.includes("ac")) amenitiesArr.push("AC");
-    if (activeFilters.includes("food")) amenitiesArr.push("Meals Included");
-    const amenities = amenitiesArr.join(",");
-    return { city: citySlug, flag, amenities, sort };
-  }, [citySlug, activeFilters, sort]);
-
-  const isDefaultQuery = activeFilters.length === 0 && sort === "newest";
-  const { data: properties, isLoading, isError, refetch } = useQuery({
-    queryKey: ["properties", citySlug, activeFilters, sort],
-    queryFn: () => api.getProperties(getFilterParams()),
-    initialData: isDefaultQuery ? initialProperties : undefined,
-  });
-
   const filteredProperties = React.useMemo(() => {
-    if (!properties) return [];
-    
-    // First, filter by budget locally
-    let results = properties.filter((p: Property) => {
+    if (!initialProperties) return [];
+    let results = [...initialProperties];
+
+    // 1. Filter by activeFilters
+    if (activeFilters.includes("verified")) {
+      results = results.filter(p => p.is_trusted || p.is_featured);
+    }
+    if (activeFilters.includes("ac")) {
+      results = results.filter(p => p.amenities?.some(a => /ac|air condition/i.test(a)));
+    }
+    if (activeFilters.includes("food")) {
+      results = results.filter(p => p.amenities?.some(a => /food|meal|mess/i.test(a)));
+    }
+
+    // 2. Filter by budget locally
+    results = results.filter((p: Property) => {
       const price = Number(p.lowest_price);
       return price >= minBudget && price <= maxBudget;
     });
 
-    // Then, perform fuzzy search locally if there's a query
+    // 3. Perform fuzzy search locally if there's a query
     if (debouncedQuery.trim()) {
       const fuse = new Fuse(results, {
         keys: ["name", "locality", "city_name", "type"],
-        threshold: 0.4, // Lower threshold = stricter match, 0.4 allows typos
-        ignoreLocation: true, // Finds match anywhere in the string
+        threshold: 0.4,
+        ignoreLocation: true,
       });
       results = fuse.search(debouncedQuery).map(result => result.item);
     }
 
+    // 4. Sort locally
+    if (sort === "price_asc") {
+      results.sort((a, b) => Number(a.lowest_price || 0) - Number(b.lowest_price || 0));
+    } else if (sort === "price_desc") {
+      results.sort((a, b) => Number(b.lowest_price || 0) - Number(a.lowest_price || 0));
+    } else if (sort === "rating_desc") {
+      results.sort((a, b) => Number((b as Record<string, unknown>).rating || 0) - Number((a as Record<string, unknown>).rating || 0));
+    }
+
     return results;
-  }, [properties, minBudget, maxBudget, debouncedQuery]);
+  }, [initialProperties, activeFilters, sort, minBudget, maxBudget, debouncedQuery]);
 
   const router = useRouter();
 
@@ -126,7 +131,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
     <div>
       {/* Premium Sticky Navigation Bar (Stitch Design) */}
       <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-border/40 mb-8 transition-all duration-300">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4 md:gap-8">
+        <div className="max-w-6xl mx-auto p-4 sm:px-6 flex items-center justify-between gap-4 md:gap-8">
           
           {/* Left: Brand / Mobile Back Button */}
           <div className="shrink-0 flex items-center">
@@ -143,7 +148,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
             <div className="w-full flex items-center bg-white border border-border/80 rounded-full px-2 py-1.5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_4px_6px_-2px_rgba(0,0,0,0.05)] transition-shadow hover:shadow-md">
               {/* City Selector */}
               <Select value={citySlug} onValueChange={(val) => router.push(`/${val}`)}>
-                <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-muted focus:ring-0 rounded-full h-auto py-1 px-4 text-sm font-medium transition-colors cursor-pointer w-auto shrink-0">
+                <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-muted focus:ring-0 rounded-full size-auto py-1 px-4 text-sm font-medium transition-colors cursor-pointer shrink-0">
                   <div className="flex items-center gap-2">
                     <MapPin className="size-[20px] text-primary" />
                     <span className="font-medium text-sm">{formatCityName(cityName)}</span>
@@ -247,7 +252,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
         <div className="sm:hidden px-4 pb-4">
           <div className="w-full flex items-center bg-white border border-border/80 rounded-full px-2 py-1.5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_4px_6px_-2px_rgba(0,0,0,0.05)] transition-shadow hover:shadow-md">
             <Select value={citySlug} onValueChange={(val) => router.push(`/${val}`)}>
-              <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-muted focus:ring-0 rounded-full h-auto py-1 px-3 text-sm font-medium transition-colors cursor-pointer w-auto shrink-0">
+              <SelectTrigger className="border-0 bg-transparent shadow-none hover:bg-muted focus:ring-0 rounded-full size-auto py-1 px-3 text-sm font-medium transition-colors cursor-pointer shrink-0">
                 <MapPin className="size-4 text-primary" />
               </SelectTrigger>
               <SelectContent className="rounded-2xl shadow-xl border-border p-2 min-w-[200px]">
@@ -276,47 +281,18 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
         </div>
       </div>
       {/* Main Content Area */}
-      <div className="container mx-auto px-4 max-w-6xl py-4">
+      <div className="container mx-auto p-4 max-w-6xl">
         {/* Results Count */}
-        {!isLoading && !isError && filteredProperties && (
+        {filteredProperties && (
           <p className="text-[15px] font-semibold text-foreground mb-4 flex items-center gap-2">
             <span>{filteredProperties.length} {filteredProperties.length === 1 ? "stay" : "stays"} found</span>
             <span className="h-px bg-border flex-1 ml-4" />
           </p>
         )}
 
-        {/* Loading Skeletons */}
-        {isLoading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-12 sm:gap-y-16">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="animate-pulse flex flex-col overflow-hidden">
-                <div className="bg-muted aspect-[20/19] w-full rounded-[16px] mb-3" />
-                <div className="space-y-3">
-                  <div className="h-5 bg-muted rounded w-1/3" />
-                  <div className="h-4 bg-muted rounded w-3/4" />
-                  <div className="h-4 bg-muted rounded w-1/2" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Error State */}
-        {isError && (
-          <div className="py-16 px-6 text-center border border-border/50 rounded-[24px] bg-card max-w-md mx-auto mt-8">
-            <p className="text-foreground font-semibold mb-2 text-lg">Couldn&apos;t load rooms</p>
-            <p className="text-muted-foreground mb-6">Check your connection and try again.</p>
-            <button
-              onClick={() => refetch()}
-              className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-            >
-              Retry
-            </button>
-          </div>
-        )}
 
         {/* Results Grid */}
-        {!isLoading && !isError && filteredProperties && filteredProperties.length > 0 && (
+        {filteredProperties && filteredProperties.length > 0 && (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-8 sm:gap-y-12">
               {filteredProperties.map((property, index) => (
@@ -341,8 +317,7 @@ export function CityListingClient({ citySlug, cityName, cities = [], initialProp
           </>
         )}
 
-        {/* Empty State */}
-        {!isLoading && !isError && filteredProperties && filteredProperties.length === 0 && (
+        {filteredProperties && filteredProperties.length === 0 && (
           <div className="py-24 text-center">
             <div className="size-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
               <Search className="size-6 text-muted-foreground" />

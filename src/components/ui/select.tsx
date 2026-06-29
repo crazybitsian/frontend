@@ -28,6 +28,9 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   )
 }
 
+/**
+ * Renders the trigger button that opens the select dropdown menu, displaying the currently selected value.
+ */
 function SelectTrigger({
   className,
   size = "default",
@@ -57,6 +60,9 @@ function SelectTrigger({
   )
 }
 
+/**
+ * Renders the dropdown menu containing the list of selectable options, handling positioning and animations.
+ */
 function SelectContent({
   className,
   children,
@@ -96,6 +102,9 @@ function SelectContent({
   )
 }
 
+/**
+ * Renders a non-selectable label within the select menu to categorize or describe a group of items.
+ */
 function SelectLabel({
   className,
   ...props
@@ -109,6 +118,9 @@ function SelectLabel({
   )
 }
 
+/**
+ * Renders an individual selectable option within the select menu, displaying a checkmark when selected.
+ */
 function SelectItem({
   className,
   children,
@@ -137,6 +149,9 @@ function SelectItem({
   )
 }
 
+/**
+ * Renders a visual separator line within the select menu to group items logically.
+ */
 function SelectSeparator({
   className,
   ...props
@@ -150,6 +165,9 @@ function SelectSeparator({
   )
 }
 
+/**
+ * Renders a button at the top of the select menu to scroll up when the list overflows.
+ */
 function SelectScrollUpButton({
   className,
   ...props
@@ -169,6 +187,9 @@ function SelectScrollUpButton({
   )
 }
 
+/**
+ * Renders a button at the bottom of the select menu to scroll down when the list overflows.
+ */
 function SelectScrollDownButton({
   className,
   ...props

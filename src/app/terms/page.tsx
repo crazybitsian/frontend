@@ -5,6 +5,9 @@ import { ShieldCheck, CheckCircle2 } from "lucide-react";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
 import Link from "next/link";
 
+/**
+ * Renders the terms of service page outlining the rules and agreements for using the platform.
+ */
 export default function TermsOfServicePage() {
   const { activeSection, scrollToSection } = useScrollSpy("acceptance");
 

@@ -40,6 +40,10 @@ const buttonVariants = cva(
   }
 )
 
+/**
+ * Renders a versatile button component that supports various variants, sizes, and states,
+ * optionally rendering as a different element using the asChild prop.
+ */
 function Button({
   className,
   variant = "default",

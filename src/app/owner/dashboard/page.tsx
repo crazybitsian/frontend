@@ -24,6 +24,9 @@ interface Property {
   photos: string[];
 }
 
+/**
+ * Renders the dashboard for property owners to manage their listings, view leads, and update availability.
+ */
 export default function OwnerDashboard() {
   const router = useRouter();
   const [properties, setProperties] = useState<Property[]>([]);
@@ -40,6 +43,9 @@ export default function OwnerDashboard() {
 
     const { mobile, password } = JSON.parse(ownerData);
 
+    /**
+     * Fetches the list of properties owned by the currently authenticated owner from the API.
+     */
     const fetchProperties = async () => {
       try {
         const res = await fetch(`https://apna-kamra.up.railway.app/api/owner/properties?mobile=${encodeURIComponent(mobile)}&password=${encodeURIComponent(password)}`);
@@ -152,7 +158,7 @@ export default function OwnerDashboard() {
                 <p className="text-muted-foreground">Manage your listed hostels and PGs.</p>
               </div>
               <button 
-                onClick={() => window.alert("Contact support")}
+                onClick={() => console.log("Contact support")}
                 className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm whitespace-nowrap"
               >
                 <Plus className="size-4" />
@@ -175,7 +181,7 @@ export default function OwnerDashboard() {
                   You haven&apos;t listed any properties. Add your first property to start receiving leads from students.
                 </p>
                 <button 
-                  onClick={() => window.alert("Contact support")}
+                  onClick={() => console.log("Contact support")}
                   className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm"
                 >
                   <Plus className="size-4" />
@@ -225,7 +231,7 @@ export default function OwnerDashboard() {
                           </p>
                         </div>
                         <button 
-                          onClick={() => window.alert("Edit functionality coming soon!")}
+                          onClick={() => console.log("Edit functionality coming soon!")}
                           className="px-4 py-2 bg-muted text-foreground text-sm font-medium rounded-lg hover:bg-border transition-colors"
                         >
                           Edit Details

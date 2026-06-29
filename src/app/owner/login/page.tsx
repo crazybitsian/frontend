@@ -6,6 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
+/**
+ * Renders the login page specifically for property owners.
+ */
 export default function OwnerLoginPage() {
   const router = useRouter();
   const [mobile, setMobile] = useState("");
@@ -13,6 +16,9 @@ export default function OwnerLoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * Processes the owner login request, managing authentication and redirecting to the owner dashboard.
+   */
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");

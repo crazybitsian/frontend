@@ -11,6 +11,9 @@ const NAV_LINKS = [
   { href: "/#cities-section", label: "Cities" },
 ];
 
+/**
+ * Renders the global navigation bar containing the logo, main links, and user authentication controls.
+ */
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 

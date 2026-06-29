@@ -2,6 +2,9 @@
 
 import { useEffect } from "react";
 
+/**
+ * Client-side component that tracks the properties a user has visited and stores them in local storage.
+ */
 export function RecentlyViewedTracker({ propertySlug }: { propertySlug: string }) {
   useEffect(() => {
     try {

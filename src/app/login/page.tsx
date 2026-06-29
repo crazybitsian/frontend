@@ -6,12 +6,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
+/**
+ * Renders the student login page, providing a form to authenticate via mobile number and password.
+ */
 export default function LoginPage() {
   const router = useRouter();
   const [mobile, setMobile] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
 
+  /**
+   * Processes the student login request, communicating with the API and updating the authentication state.
+   */
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");

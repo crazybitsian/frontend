@@ -58,6 +58,9 @@ const FAKE_REVIEWS: Review[] = [
   },
 ];
 
+/**
+ * Renders a visual representation of a rating out of 5 stars using SVG icons.
+ */
 function StarRating({ rating, size = "sm" }: { rating: number; size?: "sm" | "lg" }) {
   const starSize = size === "lg" ? "size-5" : "size-3.5";
   return (
@@ -82,6 +85,9 @@ function getAverageRating(reviews: Review[]) {
   return Math.round((sum / reviews.length) * 10) / 10;
 }
 
+/**
+ * Displays a list of user reviews for a property, including ratings, comments, and reviewer details.
+ */
 export function ReviewsSection() {
   const reviews = FAKE_REVIEWS;
   const avgRating = getAverageRating(reviews);

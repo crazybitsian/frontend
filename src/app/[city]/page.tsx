@@ -17,6 +17,9 @@ export async function generateStaticParams() {
   }
 }
 
+/**
+ * Generates dynamic SEO metadata for the city listing page based on the current city parameter.
+ */
 export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
   let title = "Stays in City — ApnaKamra";
@@ -32,6 +35,9 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   return { title, description: `Find verified hostels, PGs, and shared rooms. Zero brokerage.` };
 }
 
+/**
+ * Server component that fetches property data for a specific city and renders the main city listing interface.
+ */
 export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {
   const resolvedParams = await params;
   

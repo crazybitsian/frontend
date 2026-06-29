@@ -23,6 +23,9 @@ function DialogClose({ ...props }: DialogPrimitive.Close.Props) {
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
 }
 
+/**
+ * Renders a semi-transparent backdrop behind the dialog to focus user attention and prevent interaction with the background.
+ */
 function DialogOverlay({
   className,
   ...props
@@ -39,6 +42,9 @@ function DialogOverlay({
   )
 }
 
+/**
+ * Renders the main modal container for a dialog, handling animations, positioning, and close button logic.
+ */
 function DialogContent({
   className,
   children,
@@ -90,6 +96,9 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * Renders the footer area of a dialog, typically used for action buttons like confirm or cancel.
+ */
 function DialogFooter({
   className,
   showCloseButton = false,
@@ -117,6 +126,9 @@ function DialogFooter({
   )
 }
 
+/**
+ * Renders an accessible title for the dialog to provide context for screen readers and users.
+ */
 function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
   return (
     <DialogPrimitive.Title
@@ -130,6 +142,9 @@ function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
   )
 }
 
+/**
+ * Renders an accessible description for the dialog, providing additional context below the title.
+ */
 function DialogDescription({
   className,
   ...props

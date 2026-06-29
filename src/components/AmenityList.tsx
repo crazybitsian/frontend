@@ -40,6 +40,10 @@ function getAmenityIcon(amenity: string): React.ComponentType<{ className?: stri
   return Home;
 }
 
+/**
+ * Displays a categorized list of amenities available at a property,
+ * rendering the appropriate icons and text labels for each amenity.
+ */
 export function AmenityList({ amenities }: { amenities: string[] }) {
   if (!amenities || amenities.length === 0) {
     return (

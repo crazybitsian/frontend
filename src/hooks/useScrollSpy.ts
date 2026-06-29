@@ -2,10 +2,18 @@
 
 import { useState, useEffect } from "react";
 
+/**
+ * Custom hook that tracks the currently active section on a page based on scroll position,
+ * useful for updating navigation menus or progress indicators.
+ */
 export function useScrollSpy(initialSection: string, offset: number = 150) {
   const [activeSection, setActiveSection] = useState(initialSection);
 
   useEffect(() => {
+    /**
+     * Event listener callback that calculates which section is currently in the viewport
+     * and updates the active section state accordingly.
+     */
     const handleScroll = () => {
       const sections = document.querySelectorAll("section[id]");
       let current = "";

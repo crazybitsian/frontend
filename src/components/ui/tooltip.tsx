@@ -4,6 +4,9 @@ import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Provides context for tooltips to manage their open state and delays across the application.
+ */
 function TooltipProvider({
   delay = 0,
   ...props
@@ -25,6 +28,9 @@ function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
   return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />
 }
 
+/**
+ * Renders the content box of a tooltip, applying animations and positioning based on the trigger.
+ */
 function TooltipContent({
   className,
   side = "top",

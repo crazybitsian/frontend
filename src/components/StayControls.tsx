@@ -8,6 +8,9 @@ interface StayControlsProps {
   propertyName: string;
 }
 
+/**
+ * Renders interactive controls for a property listing, such as the share button and save/like button.
+ */
 export function StayControls({ propertySlug, propertyName }: StayControlsProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -18,6 +21,9 @@ export function StayControls({ propertySlug, propertyName }: StayControlsProps) 
     setIsLiked(wishlist.includes(propertySlug));
   }, [propertySlug]);
 
+  /**
+   * Copies the property's URL to the user's clipboard and provides a brief notification or log.
+   */
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -32,10 +38,13 @@ export function StayControls({ propertySlug, propertyName }: StayControlsProps) 
       }
     } else {
       navigator.clipboard.writeText(url);
-      window.alert("Link copied to clipboard!");
+      console.log("Link copied to clipboard!");
     }
   };
 
+  /**
+   * Toggles the saved/liked state of the property, adding or removing it from the user's wishlist.
+   */
   const handleLike = () => {
     let wishlist = JSON.parse(localStorage.getItem("apnakamra_wishlist") || "[]");
     

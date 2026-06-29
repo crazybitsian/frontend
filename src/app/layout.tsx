@@ -30,6 +30,9 @@ export const metadata: Metadata = {
   description: "Find premium, verified student and professional hostels & PG accommodations across India's top cities. Zero brokerage.",
 };
 
+/**
+ * The root layout component that wraps every page in the application, providing global providers, fonts, and base HTML structure.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

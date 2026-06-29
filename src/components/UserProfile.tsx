@@ -9,6 +9,9 @@ interface UserProfileProps {
   variant?: "default" | "transparent";
 }
 
+/**
+ * Displays the user's profile information, avatar, and quick links to account settings or wishlist.
+ */
 export function UserProfile({ variant = "default" }: UserProfileProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");

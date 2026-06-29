@@ -7,6 +7,9 @@ interface FeaturedStaysProps {
   properties: Property[];
 }
 
+/**
+ * Renders a carousel or grid of highly rated or sponsored properties for the homepage.
+ */
 export function FeaturedStays({ properties }: FeaturedStaysProps) {
   if (!properties || properties.length === 0) return null;
 

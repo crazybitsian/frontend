@@ -2,6 +2,9 @@ import { City, Property, LeadPayload, EventPayload, ImpressionPayload } from "./
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://apna-kamra.up.railway.app/api";
 
+/**
+ * A robust wrapper around the native fetch API that automatically retries failed requests with exponential backoff.
+ */
 async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 2, delay = 500, attempt = 1): Promise<Response> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
@@ -12,7 +15,7 @@ async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 
   } catch (e) {
     clearTimeout(timeout);
     if (attempt >= retries) throw e;
-    await new Promise((resolve) => setTimeout(resolve, delay * attempt));
+    await new Promise((resolve) => { setTimeout(resolve, delay * attempt); });
     return fetchWithRetry(url, options, retries, delay, attempt + 1);
   }
 }
@@ -29,6 +32,9 @@ async function apiGet<T>(path: string): Promise<T> {
   return res.json();
 }
 
+/**
+ * Helper function to send POST requests to the API, automatically handling JSON serialization and error throwing.
+ */
 async function apiPost<T, B>(path: string, body: B): Promise<T> {
   const res = await fetchWithRetry(`${API_BASE_URL}${path}`, {
     method: "POST",

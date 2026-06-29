@@ -17,6 +17,10 @@ const CITY_IMAGES: Record<string, string> = {
 const DEFAULT_CITY_IMAGE =
   "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=800&auto=format&fit=crop";
 
+/**
+ * Renders a responsive grid layout displaying a selection of featured cities,
+ * allowing users to quickly navigate to city-specific listings.
+ */
 export function CityGrid({ cities }: { cities: City[] }) {
   if (!cities || cities.length === 0) {
     return (
@@ -30,7 +34,7 @@ export function CityGrid({ cities }: { cities: City[] }) {
   const displayCities = cities.slice(0, 8);
 
   return (
-    <div className="w-full flex-1 h-full min-h-0">
+    <div className="size-full flex-1 min-h-0">
       <div className="grid grid-cols-2 md:grid-cols-4 md:grid-rows-3 gap-3 md:gap-4 lg:gap-6 size-full">
         {displayCities.map((city, index) => {
           const imageUrl =

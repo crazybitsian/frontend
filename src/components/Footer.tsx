@@ -17,6 +17,9 @@ const COMPANY_LINKS = [
   { href: "/terms", label: "Terms of Service" },
 ];
 
+/**
+ * Renders the global footer of the application containing links to terms, privacy policy, about page, and social media.
+ */
 export function Footer() {
   return (
     <footer className="bg-foreground text-white/70">

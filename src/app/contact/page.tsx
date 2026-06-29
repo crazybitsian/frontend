@@ -5,10 +5,16 @@ import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { api } from "@/lib/api/client";
 
+/**
+ * Renders the contact page with a form for users to send messages or inquiries to the platform administrators.
+ */
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  /**
+   * Processes the contact form submission, sending the data to the API and handling success/error states.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -25,7 +31,6 @@ export default function ContactPage() {
       (e.target as HTMLFormElement).reset();
     } catch (error) {
       console.error("Failed to submit message", error);
-      window.alert("Failed to send message. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

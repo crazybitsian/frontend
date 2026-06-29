@@ -3,6 +3,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 
+/**
+ * Wraps the application or component tree in a React Query ClientProvider to enable data fetching and caching.
+ */
 export function QueryProvider({ children }: { children: React.ReactNode }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [queryClient, setQueryClient] = useState(() => new QueryClient({

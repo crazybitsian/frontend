@@ -27,6 +27,9 @@ export async function generateStaticParams() {
   }
 }
 
+/**
+ * Generates dynamic SEO metadata for an individual property detail page.
+ */
 export async function generateMetadata({ params }: { params: Promise<{ city: string; stay: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
   try {
@@ -40,6 +43,9 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   }
 }
 
+/**
+ * Server component that fetches detailed information for a specific property and renders the property detail view.
+ */
 export default async function StayDetailPage({ params }: { params: Promise<{ city: string; stay: string }> }) {
   const resolvedParams = await params;
 

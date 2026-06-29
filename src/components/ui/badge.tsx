@@ -27,6 +27,9 @@ const badgeVariants = cva(
   }
 )
 
+/**
+ * Renders a small status indicator or label, applying different styles based on the variant prop.
+ */
 function Badge({
   className,
   variant = "default",

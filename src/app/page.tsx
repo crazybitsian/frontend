@@ -9,6 +9,9 @@ import Link from "next/link";
 
 export const revalidate = 3600;
 
+/**
+ * Renders the main landing page of the ApnaKamra application, serving as the entry point for students.
+ */
 export default async function Home() {
   let cities: City[] = [];
   let featuredProperties: Property[] = [];
@@ -66,7 +69,7 @@ export default async function Home() {
 
       {/* Explore Cities Section - 100vh Mastery */}
       <section id="cities-section" className="h-screen w-full bg-background overflow-hidden relative flex flex-col justify-center items-center py-12 md:py-24">
-        <div className="w-full max-w-5xl px-4 flex flex-col h-full justify-center">
+        <div className="w-full max-w-5xl px-4 flex flex-col size-full justify-center">
           {/* Single Horizontal Line Heading */}
           <div className="w-full text-center mb-6 md:mb-10">
             <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/50 leading-none truncate drop-shadow-sm pb-2">

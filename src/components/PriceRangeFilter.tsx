@@ -19,6 +19,9 @@ const HISTOGRAM_DATA = [
   2, 2, 2, 1, 1, 1, 1, 1, 1, 1
 ];
 
+/**
+ * Renders a dual-slider or input interface allowing users to filter properties within a specific price range.
+ */
 export function PriceRangeFilter({
   min,
   max,

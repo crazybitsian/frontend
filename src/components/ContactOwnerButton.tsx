@@ -11,9 +11,15 @@ interface ContactOwnerButtonProps {
   variant?: "icon" | "full";
 }
 
+/**
+ * Renders a button that opens a dialog or navigates to a form allowing a student to contact the property owner directly.
+ */
 export function ContactOwnerButton({ property, className, variant = "full" }: ContactOwnerButtonProps) {
   const [error, setError] = useState(false);
 
+  /**
+   * Handles the click event for contacting the owner, typically opening a modal or redirecting to a contact page.
+   */
   const handleContact = () => {
     if (!property.owner_mobile) {
       setError(true);

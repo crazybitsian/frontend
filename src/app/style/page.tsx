@@ -96,6 +96,9 @@ const MOCK_PROPERTIES: Property[] = [
   },
 ];
 
+/**
+ * Renders the design system kitchen-sink page, displaying all UI components, colors, and typography for verification.
+ */
 export default function StylePage() {
   const [savedStays, setSavedStays] = useState<Record<string, boolean>>({
     "stanza-living-dublin-house": true,
@@ -303,7 +306,7 @@ export default function StylePage() {
             </div>
             <div className="flex items-center gap-4">
               <span className="w-12 text-xs font-semibold text-muted-foreground">16px</span>
-              <div className="h-4 bg-primary/20 border border-primary/30 rounded w-4" />
+              <div className="size-4 bg-primary/20 border border-primary/30 rounded" />
             </div>
             <div className="flex items-center gap-4">
               <span className="w-12 text-xs font-semibold text-muted-foreground">24px</span>

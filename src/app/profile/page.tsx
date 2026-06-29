@@ -13,6 +13,9 @@ import { api } from "@/lib/api/client";
 import { StayCard } from "@/components/StayCard";
 import { Property } from "@/lib/api/types";
 
+/**
+ * Renders the user's profile dashboard, displaying their saved properties and account details.
+ */
 export default function ProfilePage() {
   const router = useRouter();
   const [userName, setUserName] = useState("Student");
@@ -34,6 +37,9 @@ export default function ProfilePage() {
     const name = localStorage.getItem("apnakamra_user_name");
     if (name) setUserName(name);
 
+    /**
+     * Fetches the user's saved or favorite properties from the backend or local storage.
+     */
     const loadWishlist = async () => {
       const storedItems = JSON.parse(localStorage.getItem("apnakamra_wishlist") || "[]");
       
@@ -68,6 +74,9 @@ export default function ProfilePage() {
     };
     loadWishlist();
 
+    /**
+     * Retrieves the list of recently viewed properties from local storage to display in the profile.
+     */
     const loadRecentlyViewed = async () => {
       const storedRV = JSON.parse(localStorage.getItem("apnakamra_recently_viewed") || "[]");
       if (storedRV.length > 0) {

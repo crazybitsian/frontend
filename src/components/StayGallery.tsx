@@ -10,6 +10,10 @@ interface StayGalleryProps {
   title: string;
 }
 
+/**
+ * Displays a masonry or grid gallery of images for a specific property,
+ * allowing users to view high-quality photos of the stay.
+ */
 export function StayGallery({ images, title }: StayGalleryProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
@@ -60,6 +64,9 @@ export function StayGallery({ images, title }: StayGalleryProps) {
     };
   }, [isLightboxOpen]);
 
+  /**
+   * Helper function that renders an individual image card within the gallery, handling lazy loading and aspect ratios.
+   */
   const renderImageCard = (item: { src: string; originalIndex: number }, key: number, sizes: string) => (
     <div
       key={key}

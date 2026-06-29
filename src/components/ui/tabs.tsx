@@ -5,6 +5,9 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Renders the root container for a tabbed interface, managing the state of the currently active tab.
+ */
 function Tabs({
   className,
   orientation = "horizontal",
@@ -38,6 +41,9 @@ const tabsListVariants = cva(
   }
 )
 
+/**
+ * Renders the container for the tab triggers, laying them out horizontally or vertically.
+ */
 function TabsList({
   className,
   variant = "default",
@@ -53,6 +59,9 @@ function TabsList({
   )
 }
 
+/**
+ * Renders an individual tab button that, when clicked, activates its corresponding content pane.
+ */
 function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
   return (
     <TabsPrimitive.Tab

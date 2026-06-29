@@ -13,6 +13,10 @@ interface StayCardProps {
   priorityImage?: boolean;
 }
 
+/**
+ * Renders an individual property card showing a summary of the stay,
+ * including an image gallery, price, rating, and quick details.
+ */
 export function StayCard({ property, isSaved = false, onSaveToggle, priorityImage = false }: StayCardProps) {
   const {
     name,
